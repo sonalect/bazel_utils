@@ -25,7 +25,7 @@ protoc.plugin(
 )
 protoc.plugin(
     name = "protoc-gen-connect-rust",
-    version = "v0.9.0",
+    version = "v0.9.1",
 )
 protoc.plugin(
     name = "protoc-gen-go",
@@ -33,15 +33,15 @@ protoc.plugin(
 )
 protoc.plugin(
     name = "protoc-gen-grpc-gateway",
-    version = "v2.30.0",
+    version = "v2.31.0",
 )
 protoc.plugin(
     name = "protoc-gen-openapiv2",
-    version = "v2.30.0",
+    version = "v2.31.0",
 )
 protoc.plugin(
     name = "protoc-gen-protovalidate-buffa",
-    version = "v0.10.0",
+    version = "v0.10.1",
 )
 use_repo(
     protoc,

@@ -40,5 +40,32 @@ PLUGIN = {
                 "sha256": "cfb22284fe46063203b50d096a8829d364d0cbafce5f80dd1903da0734ec56f3",
             },
         },
+        "v0.9.1": {
+            "linux_amd64": {
+                "bin": "protoc-gen-connect-rust",
+                "file": "linux-x86_64",
+                "sha256": "580c2a0690b9ad48364bd455cf0b7f8f0153bcbffe85140dd2ce07bfc0b1da24",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-connect-rust",
+                "file": "linux-aarch64",
+                "sha256": "c945e5c2755d24d5fb81cc3bc9f00a2ca4778d4d687d598d9c84e6256067d685",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-connect-rust",
+                "file": "darwin-x86_64",
+                "sha256": "29437af4528c8e1ac00e9ec2079e2ffa588f17be74dceaa9664a356ffbd82516",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-connect-rust",
+                "file": "darwin-aarch64",
+                "sha256": "8efc5fcce492d9e9e4bc540bfefc9b7651c7b6780ba9b833d22dbd2358c7286c",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-connect-rust.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "5887b8f240a48d8009e868dbe08096b5a73e343d9140979e1bc844d7b49e3e0e",
+            },
+        },
     },
 }

@@ -2,7 +2,7 @@
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-_RUFF = "0.16.6"
+_RUFF = "0.16.9"
 
 _RUFF_URL = "https://github.com/astral-sh/ruff/releases/download/{version}/ruff-{platform}"
 
@@ -13,7 +13,7 @@ _WIN_BUILD = """exports_files(["ruff.exe"], visibility = ["//visibility:public"]
 http_archive(
     name = "ruff_linux_amd64",
     build_file_content = _UNIX_BUILD,
-    sha256 = "0696335ef16615d8c7445ad438750eb0f55b3da6f153df21265a7c6d5750254f",
+    sha256 = "1bfbb819b5d4f9af501748862276b60e412d336034d99387691a4d4bce7a6f13",
     strip_prefix = "ruff-x86_64-unknown-linux-gnu",
     urls = [_RUFF_URL.format(
         platform = "x86_64-unknown-linux-gnu.tar.gz",
@@ -24,7 +24,7 @@ http_archive(
 http_archive(
     name = "ruff_linux_arm64",
     build_file_content = _UNIX_BUILD,
-    sha256 = "3c1b99f65b8bf2df64ff099ee072e11b4652813e2c164ec875a26fc9e99be88f",
+    sha256 = "a13061e8f471b49c9d2aa284c32dd54a0e5534d702d1a44e1d7f4c875569586d",
     strip_prefix = "ruff-aarch64-unknown-linux-gnu",
     urls = [_RUFF_URL.format(
         platform = "aarch64-unknown-linux-gnu.tar.gz",
@@ -35,7 +35,7 @@ http_archive(
 http_archive(
     name = "ruff_darwin_amd64",
     build_file_content = _UNIX_BUILD,
-    sha256 = "87cce7e591603efa979be9044ac00835638a5d9052947070b6e2e7c0cdb21940",
+    sha256 = "e98ea259a021c87d3a1f8bf18639d2e32dcd45cb2ef1afcb41b13e295de1e2b3",
     strip_prefix = "ruff-x86_64-apple-darwin",
     urls = [_RUFF_URL.format(
         platform = "x86_64-apple-darwin.tar.gz",
@@ -46,7 +46,7 @@ http_archive(
 http_archive(
     name = "ruff_darwin_arm64",
     build_file_content = _UNIX_BUILD,
-    sha256 = "77513748c833b435b82453ba20e07db808ef6c5121945ede80a6cf21bee468a4",
+    sha256 = "33d35394499094cf6eb90f730dc82f11c0fab05d176378ae4f67de985ecc4146",
     strip_prefix = "ruff-aarch64-apple-darwin",
     urls = [_RUFF_URL.format(
         platform = "aarch64-apple-darwin.tar.gz",
@@ -58,7 +58,7 @@ http_archive(
 http_archive(
     name = "ruff_windows_amd64",
     build_file_content = _WIN_BUILD,
-    sha256 = "d968cbf82bcb42042a59e9478a48f9a00db88cceaa2eeaa86c4834c02a70eaf6",
+    sha256 = "fe5eb06b2f185b0d8035e17df9df0c831e59b3c98f11170206500650218a0b76",
     urls = [_RUFF_URL.format(
         platform = "x86_64-pc-windows-msvc.zip",
         version = _RUFF,
@@ -68,7 +68,7 @@ http_archive(
 http_archive(
     name = "ruff_windows_arm64",
     build_file_content = _WIN_BUILD,
-    sha256 = "0a14f2a8de7e6a2bb43f47b329d639970462a8ca302b1c4c18668b5e3135462e",
+    sha256 = "98f41e001af9ccbbd16a9948b1214e711af9bacfaa204951d831584dfe109fcf",
     urls = [_RUFF_URL.format(
         platform = "aarch64-pc-windows-msvc.zip",
         version = _RUFF,
