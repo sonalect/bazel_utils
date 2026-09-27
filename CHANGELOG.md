@@ -8,6 +8,21 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.2.10] - 2026-09-27
+
+### Changed
+
+- Bump golangci-lint version from 2.13.2 to 2.14.0 and update corresponding SHA256 checksums for various platforms.
+- Upgrade pnpm from version 11.20.0 to 12.6.0 in package.json and update pnpm-lock.yaml accordingly.
+- Update markdownlint-cli2 version from 0.23.2 to 0.23.3 in package.json, pnpm-lock.yaml, and pnpm-workspace.yaml.
+- Upgrade protoc plugin versions:
+  - protoc-gen-connect-rust from v0.9.0 to v0.9.1
+  - protoc-gen-grpc-gateway from v2.30.0 to v2.31.0
+  - protoc-gen-openapiv2 from v2.30.0 to v2.31.0
+  - protoc-gen-protovalidate-buffa from v0.10.0 to v0.10.1
+- Update rules_python version from 2.3.3 to 2.3.4 in python/MODULE.bazel.
+- Bump ruff version from 0.16.6 to 0.16.9 and update SHA256 checksums for various platforms.
+
 ## [0.2.9] - 2026-09-19
 
 ### Added
@@ -159,7 +174,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/amsokol/bazel_utils/compare/v0.2.9...HEAD
+[unreleased]: https://github.com/amsokol/bazel_utils/compare/v0.2.10...HEAD
+[0.2.10]: https://github.com/amsokol/bazel_utils/compare/v0.2.9...v0.2.10
 [0.2.9]: https://github.com/amsokol/bazel_utils/compare/v0.2.8...v0.2.9
 [0.2.8]: https://github.com/amsokol/bazel_utils/compare/v0.2.7...v0.2.8
 [0.2.7]: https://github.com/amsokol/bazel_utils/compare/v0.2.6...v0.2.7
