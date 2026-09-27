@@ -8,9 +8,15 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.2.11] - 2026-09-27
+
 ### Fixed
 
 - `bazel_utils_buf`: `buf_generate` and `buf_lint_test` now skip `buf dep update` when `buf.yaml` has no `deps:` section to avoid the "No configured dependencies were found to update" warning when all dependencies are managed by Bazel.
+
+### Changed
+
+- Raised every language module and the aggregator to `0.2.11` (lockstep).
 
 ## [0.2.10] - 2026-09-27
 
@@ -178,7 +184,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/amsokol/bazel_utils/compare/v0.2.10...HEAD
+[unreleased]: https://github.com/amsokol/bazel_utils/compare/v0.2.11...HEAD
+[0.2.11]: https://github.com/amsokol/bazel_utils/compare/v0.2.10...v0.2.11
 [0.2.10]: https://github.com/amsokol/bazel_utils/compare/v0.2.9...v0.2.10
 [0.2.9]: https://github.com/amsokol/bazel_utils/compare/v0.2.8...v0.2.9
 [0.2.8]: https://github.com/amsokol/bazel_utils/compare/v0.2.7...v0.2.8
