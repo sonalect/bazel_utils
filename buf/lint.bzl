@@ -30,7 +30,9 @@ def _buf_lint_test_impl(ctx):
             "export HOME=\"$ROOT/home\"\n",
             "export BUF_CACHE_DIR=\"$ROOT/buf-cache\"\n",
             "cd \"$WORKDIR\"\n",
-            "\"$buf\" dep update\n",
+            # Skip when buf.yaml has no `deps:` to avoid buf's
+            # "No configured dependencies were found to update" warning.
+            "if grep -q '^deps:' buf.yaml; then \"$buf\" dep update; fi\n",
             "exec \"$buf\" lint{}\n".format("".join(
                 [" --path " + shell.quote(p) for p in ctx.attr.paths],
             )),

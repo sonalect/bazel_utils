@@ -263,7 +263,10 @@ def _buf_generate_impl(ctx):
         'mkdir -p "{}"'.format(out_dir.path),
         'OUT="$(realpath "{}")"'.format(out_dir.path),
         'cd "$WORKDIR"',
-        '"$BUF" dep update',
+        # `buf dep update` warns "No configured dependencies were found to
+        # update" when buf.yaml has no `deps:` (e.g. all deps moved to
+        # Bazel deps). Only run it when there is something to resolve.
+        'if grep -q "^deps:" buf.yaml; then "$BUF" dep update; fi',
     ] + _copy_generated_lines()
 
     _run_buf(

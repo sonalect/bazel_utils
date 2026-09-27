@@ -8,6 +8,10 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+### Fixed
+
+- `bazel_utils_buf`: `buf_generate` and `buf_lint_test` now skip `buf dep update` when `buf.yaml` has no `deps:` section to avoid the "No configured dependencies were found to update" warning when all dependencies are managed by Bazel.
+
 ## [0.2.10] - 2026-09-27
 
 ### Changed
