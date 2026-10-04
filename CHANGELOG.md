@@ -184,18 +184,18 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/amsokol/bazel_utils/compare/v0.2.11...HEAD
-[0.2.11]: https://github.com/amsokol/bazel_utils/compare/v0.2.10...v0.2.11
-[0.2.10]: https://github.com/amsokol/bazel_utils/compare/v0.2.9...v0.2.10
-[0.2.9]: https://github.com/amsokol/bazel_utils/compare/v0.2.8...v0.2.9
-[0.2.8]: https://github.com/amsokol/bazel_utils/compare/v0.2.7...v0.2.8
-[0.2.7]: https://github.com/amsokol/bazel_utils/compare/v0.2.6...v0.2.7
-[0.2.6]: https://github.com/amsokol/bazel_utils/compare/v0.2.5...v0.2.6
-[0.2.5]: https://github.com/amsokol/bazel_utils/compare/v0.2.4...v0.2.5
-[0.2.4]: https://github.com/amsokol/bazel_utils/compare/v0.2.3...v0.2.4
-[0.2.3]: https://github.com/amsokol/bazel_utils/compare/v0.2.2...v0.2.3
-[0.2.2]: https://github.com/amsokol/bazel_utils/compare/v0.2.1...v0.2.2
-[0.2.1]: https://github.com/amsokol/bazel_utils/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/amsokol/bazel_utils/compare/v0.1.1...v0.2.0
-[0.1.1]: https://github.com/amsokol/bazel_utils/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/amsokol/bazel_utils/releases/tag/v0.1.0
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.2.11...HEAD
+[0.2.11]: https://github.com/sonalect/bazel_utils/compare/v0.2.10...v0.2.11
+[0.2.10]: https://github.com/sonalect/bazel_utils/compare/v0.2.9...v0.2.10
+[0.2.9]: https://github.com/sonalect/bazel_utils/compare/v0.2.8...v0.2.9
+[0.2.8]: https://github.com/sonalect/bazel_utils/compare/v0.2.7...v0.2.8
+[0.2.7]: https://github.com/sonalect/bazel_utils/compare/v0.2.6...v0.2.7
+[0.2.6]: https://github.com/sonalect/bazel_utils/compare/v0.2.5...v0.2.6
+[0.2.5]: https://github.com/sonalect/bazel_utils/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/sonalect/bazel_utils/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/sonalect/bazel_utils/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/sonalect/bazel_utils/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/sonalect/bazel_utils/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/sonalect/bazel_utils/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/sonalect/bazel_utils/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/sonalect/bazel_utils/releases/tag/v0.1.0
