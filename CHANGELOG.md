@@ -8,6 +8,18 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.2.12] - 2026-10-06
+
+### Fixed
+
+- `bazel_utils_bazel`: the buildifier v10.1.0 checksums for `darwin_amd64`
+  and `darwin_arm64` were buildozer's, so every macOS fetch of buildifier
+  failed with a checksum mismatch. They are now buildifier's own.
+
+### Changed
+
+- Raised every language module and the aggregator to `0.2.12` (lockstep).
+
 ## [0.2.11] - 2026-09-27
 
 ### Fixed
