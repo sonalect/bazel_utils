@@ -50,6 +50,7 @@ filegroup(
         "@bazel_utils_buf//protoc/plugins/protoc-gen-buffa-packaging",
         "@bazel_utils_buf//protoc/plugins/protoc-gen-connect-go",
         "@bazel_utils_buf//protoc/plugins/protoc-gen-connect-rust",
+        "@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust",
         "@bazel_utils_buf//protoc/plugins/protoc-gen-go",
         "@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway",
         "@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2",

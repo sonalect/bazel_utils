@@ -2,11 +2,11 @@
 
 module(
     name = "bazel_utils_protoc",
-    version = "0.2.12",
+    version = "0.2.13",
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.2.12")
+bazel_dep(name = "bazel_utils_core", version = "0.2.13")
 
 # Fallback when this module is root. The consumer's protoc.plugin tags win
 # per name and are what get downloaded.
@@ -26,6 +26,10 @@ protoc.plugin(
 protoc.plugin(
     name = "protoc-gen-connect-rust",
     version = "v0.9.1",
+)
+protoc.plugin(
+    name = "protoc-gen-contract-rust",
+    version = "v0.1.0",
 )
 protoc.plugin(
     name = "protoc-gen-go",
@@ -49,6 +53,7 @@ use_repo(
     "protoc_gen_buffa_packaging",
     "protoc_gen_connect_go",
     "protoc_gen_connect_rust",
+    "protoc_gen_contract_rust",
     "protoc_gen_go",
     "protoc_gen_grpc_gateway",
     "protoc_gen_openapiv2",

@@ -8,6 +8,18 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.2.13] - 2026-10-06
+
+### Added
+
+- `bazel_utils_protoc`: `protoc-gen-contract-rust` (plain Rust sync and
+  async traits for protobuf services, over buffa's message types), catalog
+  version v0.1.0 for linux, darwin, and windows on amd64 and arm64.
+
+### Changed
+
+- Raised every language module and the aggregator to `0.2.13` (lockstep).
+
 ## [0.2.12] - 2026-10-06
 
 ### Fixed
@@ -196,7 +208,9 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.2.11...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.2.13...HEAD
+[0.2.13]: https://github.com/sonalect/bazel_utils/compare/v0.2.12...v0.2.13
+[0.2.12]: https://github.com/sonalect/bazel_utils/compare/v0.2.11...v0.2.12
 [0.2.11]: https://github.com/sonalect/bazel_utils/compare/v0.2.10...v0.2.11
 [0.2.10]: https://github.com/sonalect/bazel_utils/compare/v0.2.9...v0.2.10
 [0.2.9]: https://github.com/sonalect/bazel_utils/compare/v0.2.8...v0.2.9

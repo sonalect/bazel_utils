@@ -10,6 +10,7 @@ bzl_library(
         "//plugins/protoc-gen-buffa-packaging:registry_bzl",
         "//plugins/protoc-gen-connect-go:registry_bzl",
         "//plugins/protoc-gen-connect-rust:registry_bzl",
+        "//plugins/protoc-gen-contract-rust:registry_bzl",
         "//plugins/protoc-gen-go:registry_bzl",
         "//plugins/protoc-gen-grpc-gateway:registry_bzl",
         "//plugins/protoc-gen-openapiv2:registry_bzl",
