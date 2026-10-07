@@ -12,7 +12,7 @@ NAME = "protoc-gen-contract-rust"
 PLUGIN = {
     "kind": "file",
     "name": NAME,
-    "url": "https://github.com/sonalect/protoc-gen-contract-rust/releases/download/{version}/protoc-gen-contract-rust-{version}-{file}",
+    "url": "https://github.com/sonalect/proto-contract.rs/releases/download/{version}/protoc-gen-contract-rust-{version}-{file}",
     "versions": {
         "v0.1.0": {
             "linux_amd64": {
@@ -44,6 +44,38 @@ PLUGIN = {
                 "bin": "protoc-gen-contract-rust.exe",
                 "file": "windows-aarch64.exe",
                 "sha256": "f667db5d6d84c724831e7cacbc0df04b1392e287f681c784f169dd7b0d21c40d",
+            },
+        },
+        "v0.2.0": {
+            "linux_amd64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "linux-x86_64",
+                "sha256": "1c527cd80b1894cec5bff4fbde419c438069c7dadd8852ce09c9b13ed4af402f",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "linux-aarch64",
+                "sha256": "379dbf1d9569e99590ca3a433c936f2f11d8f00c70ff51ad6a8b67948b4e44d6",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "darwin-x86_64",
+                "sha256": "593fc9889eba949f496c3aacf31d86453216245bffe8bccae3bf04b954463ad8",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "darwin-aarch64",
+                "sha256": "6dff273be67bafb605b9c65ed3d0a398bb5613e56bb9eea92dde96f7a38e55c0",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-contract-rust.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "1910f88b7ac6e073578d4e3efd50e571f466688edb453c068c868ee1fb77fc1b",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-contract-rust.exe",
+                "file": "windows-aarch64.exe",
+                "sha256": "0a42cf06bdaf82b0edff7d178f9e53e9bb032810b68db2d9a51efd4e712d2ad8",
             },
         },
     },

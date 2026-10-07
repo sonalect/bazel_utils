@@ -4,7 +4,7 @@ Starlark helpers for Bazel workspaces. Each language is a **separate Bazel modul
 
 `bazel_utils_core` is pulled in transitively. The root module `bazel_utils` in this repository is an aggregator for development, not a consumer dependency.
 
-Current module version: **0.2.13**. See [CHANGELOG.md](CHANGELOG.md) for release notes.
+Current module version: **0.2.14**. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 | Module                                      | Load                                   | Public API                                                                            |
 | ------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -20,16 +20,16 @@ Workspace-cd tests (`*_test` macros that `cd` to the consumer repo) default `loc
 
 Pass `buildifier` / `golangci` / `govulncheck` / `buf` / `ruff` / `pip_audit` / `cargo_audit` / `markdownlint` only to replace this module's binary.
 
-Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.2.13` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
+Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.2.14` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
 
 ```starlark
-bazel_dep(name = "bazel_utils_core", version = "0.2.13")
+bazel_dep(name = "bazel_utils_core", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_core",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "core",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 ```
 
@@ -43,13 +43,13 @@ Prebuilt [buildifier](https://github.com/bazelbuild/buildtools) (GitHub release,
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_bazel", version = "0.2.13")
+bazel_dep(name = "bazel_utils_bazel", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_bazel",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "bazel",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 ```
 
@@ -126,13 +126,13 @@ The action sandbox does not inherit the user shell. Without this, buf runs anony
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_buf", version = "0.2.13")
+bazel_dep(name = "bazel_utils_buf", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_buf",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "buf",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 
 buf = use_extension("@bazel_utils_buf//:extensions.bzl", "buf")
@@ -233,7 +233,7 @@ GitHub-release binaries from [`bazel_utils_protoc`](#bazel_utils_protoc). Tag th
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0          | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`       | [sonalect/protoc-gen-contract-rust](https://github.com/sonalect/protoc-gen-contract-rust)               | v0.1.0           | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0   | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12         | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
@@ -331,13 +331,13 @@ Canonical labels: `@bazel_utils_protoc//plugins/…`. [`bazel_utils_buf`](#bazel
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_protoc", version = "0.2.13")
+bazel_dep(name = "bazel_utils_protoc", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_protoc",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "protoc",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 
 protoc = use_extension("@bazel_utils_protoc//:extensions.bzl", "protoc")
@@ -359,7 +359,7 @@ protoc.plugin(
 )
 protoc.plugin(
     name = "protoc-gen-contract-rust",
-    version = "v0.1.0",
+    version = "v0.2.0",
 )
 protoc.plugin(
     name = "protoc-gen-go",
@@ -396,7 +396,7 @@ Module-extension tag. One per plugin name per module; the root module's tag wins
 | `@bazel_utils_protoc//plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
 | `@bazel_utils_protoc//plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0          | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_protoc//plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-contract-rust`       | [sonalect/protoc-gen-contract-rust](https://github.com/sonalect/protoc-gen-contract-rust)               | v0.1.0           | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_protoc//plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0   | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_protoc//plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12         | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_protoc//plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
 | `@bazel_utils_protoc//plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
@@ -414,13 +414,13 @@ Prebuilt [golangci-lint](https://github.com/golangci/golangci-lint) (GitHub rele
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_go", version = "0.2.13")
+bazel_dep(name = "bazel_utils_go", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_go",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "go",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 ```
 
@@ -488,13 +488,13 @@ Prebuilt [ruff](https://github.com/astral-sh/ruff) (GitHub release) and [pip-aud
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_python", version = "0.2.13")
+bazel_dep(name = "bazel_utils_python", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_python",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "python",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 ```
 
@@ -578,13 +578,13 @@ Prebuilt [cargo-audit](https://github.com/rustsec/rustsec/tree/main/cargo-audit)
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_rust", version = "0.2.13")
+bazel_dep(name = "bazel_utils_rust", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_rust",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "rust",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 ```
 
@@ -625,13 +625,13 @@ cargo_audit_test(
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_md", version = "0.2.13")
+bazel_dep(name = "bazel_utils_md", version = "0.2.14")
 
 git_override(
     module_name = "bazel_utils_md",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "markdown",
-    tag = "v0.2.13",
+    tag = "v0.2.14",
 )
 ```
 
