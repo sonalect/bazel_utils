@@ -94,10 +94,16 @@ jobs:
           mkdir -p "${dir}"
           curl -fsSL -o "${dir}/${BAZEL_EXE}" \
             "https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/${BAZELISK}"
-          if command -v sha256sum >/dev/null; then
-            echo "${BAZELISK_SHA256}  ${dir}/${BAZEL_EXE}" | sha256sum -c
+          # macOS's BSD sha256sum cannot read a checklist from stdin, so
+          # compute the hash and compare it here.
+          if command -v shasum >/dev/null; then
+            actual="$(shasum -a 256 "${dir}/${BAZEL_EXE}" | awk '{print $1}')"
           else
-            echo "${BAZELISK_SHA256}  ${dir}/${BAZEL_EXE}" | shasum -a 256 -c
+            actual="$(sha256sum "${dir}/${BAZEL_EXE}" | awk '{print $1}')"
+          fi
+          if [[ "${actual}" != "${BAZELISK_SHA256}" ]]; then
+            echo "bazelisk sha256 mismatch: got ${actual}, want ${BAZELISK_SHA256}" >&2
+            exit 1
           fi
           chmod +x "${dir}/${BAZEL_EXE}"
           echo "${dir}" >> "${GITHUB_PATH}"
