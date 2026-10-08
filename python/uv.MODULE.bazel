@@ -1,0 +1,81 @@
+"""Prebuilt uv (GitHub release) for `uv audit`. Fetched for the exec OS/CPU.
+
+sha256 from the release's sha256.sum:
+https://github.com/astral-sh/uv/releases/download/0.12.23/sha256.sum
+"""
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+_UV = "0.12.23"
+
+_UV_URL = "https://github.com/astral-sh/uv/releases/download/{version}/uv-{platform}"
+
+_UNIX_BUILD = """exports_files(["uv"], visibility = ["//visibility:public"])"""
+
+_WIN_BUILD = """exports_files(["uv.exe"], visibility = ["//visibility:public"])"""
+
+http_archive(
+    name = "uv_linux_amd64",
+    build_file_content = _UNIX_BUILD,
+    sha256 = "1cff8783850e794470aadb73f54b749542a511fc57b0ce6468b64bd3852e0ade",
+    strip_prefix = "uv-x86_64-unknown-linux-musl",
+    urls = [_UV_URL.format(
+        platform = "x86_64-unknown-linux-musl.tar.gz",
+        version = _UV,
+    )],
+)
+
+http_archive(
+    name = "uv_linux_arm64",
+    build_file_content = _UNIX_BUILD,
+    sha256 = "b536543cc4d50661986b165c76ee8aa9056e4fa332edcd153ff2e98760f9359b",
+    strip_prefix = "uv-aarch64-unknown-linux-musl",
+    urls = [_UV_URL.format(
+        platform = "aarch64-unknown-linux-musl.tar.gz",
+        version = _UV,
+    )],
+)
+
+http_archive(
+    name = "uv_darwin_amd64",
+    build_file_content = _UNIX_BUILD,
+    sha256 = "960da44cb4b73685206ddd250b19e0a117fa41095710c1038f081f5cb613efb4",
+    strip_prefix = "uv-x86_64-apple-darwin",
+    urls = [_UV_URL.format(
+        platform = "x86_64-apple-darwin.tar.gz",
+        version = _UV,
+    )],
+)
+
+http_archive(
+    name = "uv_darwin_arm64",
+    build_file_content = _UNIX_BUILD,
+    sha256 = "50487ae565ccd96e499056b4674d438f4c53170202617b4c759defe0c6a1b544",
+    strip_prefix = "uv-aarch64-apple-darwin",
+    urls = [_UV_URL.format(
+        platform = "aarch64-apple-darwin.tar.gz",
+        version = _UV,
+    )],
+)
+
+# Windows zips put uv.exe at the archive root (no strip_prefix).
+http_archive(
+    name = "uv_windows_amd64",
+    build_file_content = _WIN_BUILD,
+    sha256 = "75d05de6762778c31ee183398de7dd15093fad0ed90b1f236d8205ea5ec00c90",
+    urls = [_UV_URL.format(
+        platform = "x86_64-pc-windows-msvc.zip",
+        version = _UV,
+    )],
+)
+
+# Windows zips put uv.exe at the archive root (no strip_prefix).
+http_archive(
+    name = "uv_windows_arm64",
+    build_file_content = _WIN_BUILD,
+    sha256 = "13294e232ececbe709c06b74e6ced06f2a225ea5591476685362f22be56a50d5",
+    urls = [_UV_URL.format(
+        platform = "aarch64-pc-windows-msvc.zip",
+        version = _UV,
+    )],
+)

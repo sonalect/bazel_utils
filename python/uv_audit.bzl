@@ -5,9 +5,9 @@ load("@bazel_utils_core//internal:launcher.bzl", "LAUNCHER_ATTRS", "launcher")
 load("@bazel_utils_core//internal:workspace_tool.bzl", "append_workspace_file", "lock_label", "manifest_label", "workspace_test_tags", "wrapper_script_header")
 
 def _impl(ctx):
-    uv = ctx.file.uv
+    uv = ctx.executable.uv
     if not uv:
-        fail("{}: uv {} is missing".format(ctx.label, ctx.attr.uv.label))
+        fail("{}: uv {} is not executable".format(ctx.label, ctx.attr.uv.label))
 
     flags = " ".join([shell.quote(a) for a in ctx.attr.flags])
     chunks = wrapper_script_header(
@@ -70,10 +70,10 @@ _uv_audit_test = rule(
             doc = "Consumer pyproject.toml next to uv.lock (the uv project root).",
         ),
         "uv": attr.label(
-            default = Label("@uv//:uv"),
-            allow_single_file = True,
+            default = Label("//:uv"),
+            executable = True,
             cfg = "exec",
-            doc = "uv binary pinned in this module's uv_bin.toolchain (override to use another).",
+            doc = "Prebuilt uv from GitHub releases (override to use another).",
         ),
         "workspace": attr.label(
             mandatory = True,

@@ -85,9 +85,12 @@ patch; breaking Starlark API changes bump the minor.
 - `protoc-gen-protovalidate-buffa` pin from v0.10.1 to v0.10.2.
 - `bazel_utils_go`: rules_go from 0.63.0 to 0.64.1.
 - `bazel_utils_python`: ruff from 0.16.9 to 0.16.10.
-- `bazel_utils_python`: uv pinned to 0.12.23 in `uv_bin.toolchain` (version
-  and sha256s from the release's `sha256.sum`) instead of aspect_rules_py's
-  default 0.11.6.
+- `bazel_utils_python`: uv 0.12.23 is fetched directly from its GitHub
+  release (`python/uv.MODULE.bazel`, sha256s from the release's
+  `sha256.sum`), like ruff, instead of through aspect_rules_py's `uv_bin`
+  (default 0.11.6). The module no longer depends on aspect_rules_py, whose
+  1.12.1 host repository fails on Windows (`Unsupported platform windows`)
+  and broke analysis of the whole build there.
 - `bazel_utils_markdown`: aspect_rules_js from 3.4.1 to 3.5.1, rules_nodejs
   from 6.7.5 to 6.7.6, Node from 24.18.0 to 24.21.0, and pnpm from 11.20.0
   to 12.10.1. Both are newer than the rules' catalogs, so Node's sha256s
