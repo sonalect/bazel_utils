@@ -74,7 +74,7 @@ PLUGIN = {
             "windows_arm64": {
                 "bin": "protoc-gen-grpc-gateway.exe",
                 "file": "windows-arm64.exe",
-                "sha256": "41d56ea81d2f3abd6f02075fbab3a0020389d6d289925745ebf45f8a0841265b",
+                "sha256": "3ce0de4e2131231666850a2c6e1601d86b698c8b151bcb2a8a873899430b5ce8",
             },
         },
     },

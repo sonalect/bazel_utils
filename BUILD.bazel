@@ -41,6 +41,11 @@ test_suite(
 )
 
 test_suite(
+    name = "protoc_tests",
+    tests = ["@bazel_utils_protoc//plugins:catalog_test"],
+)
+
+test_suite(
     name = "buf_tests",
     tests = [
         "@bazel_utils_buf//:dep_import_path_test",

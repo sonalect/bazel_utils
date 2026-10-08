@@ -1,6 +1,6 @@
 """protoc.plugin: fetch prebuilt local codegen plugins."""
 
-load("//plugins:defs.bzl", "PLUGINS", "plugin_platforms", "plugin_repo_name")
+load("//plugins:defs.bzl", "PLUGINS", "plugin_platforms", "plugin_repo_name", "plugin_url")
 
 _CONSTRAINTS = {
     "linux_amd64": "@bazel_utils_core//:linux_amd64",
@@ -16,15 +16,6 @@ _CONSTRAINTS = {
 # //plugins:unzip.bzl with the hermetic bsdtar toolchain.
 _UNZIP_BZL = str(Label("//plugins:unzip.bzl"))
 
-def _plugin_url(plugin, version, spec):
-    kwargs = {
-        "file": spec["file"],
-        "version": version,
-    }
-    if "{version_bare}" in plugin["url"]:
-        kwargs["version_bare"] = version[1:] if version.startswith("v") else version
-    return plugin["url"].format(**kwargs)
-
 def _plugin_repo_impl(rctx):
     """Download every platform of the requested plugin; BUILD selects exec OS/CPU."""
     plugin = PLUGINS[rctx.attr.plugin_name]
@@ -34,7 +25,7 @@ def _plugin_repo_impl(rctx):
     for plat, spec in platforms.items():
         if plat not in _CONSTRAINTS:
             fail("protoc.plugin: unknown platform {} for {}".format(plat, rctx.attr.plugin_name))
-        url = _plugin_url(plugin, rctx.attr.version, spec)
+        url = plugin_url(plugin, rctx.attr.version, spec)
         dest = "{}/{}".format(plat, spec["bin"])
         if plugin["kind"] == "file":
             rctx.download(
