@@ -2,11 +2,11 @@
 
 module(
     name = "bazel_utils_protoc",
-    version = "0.2.14",
+    version = "0.3.0",
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.2.14")
+bazel_dep(name = "bazel_utils_core", version = "0.3.0")
 
 # Hermetic bsdtar extracts zip releases (//plugins:unzip.bzl).
 bazel_dep(name = "tar.bzl", version = "0.10.9")

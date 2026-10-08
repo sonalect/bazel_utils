@@ -2,12 +2,12 @@
 
 module(
     name = "bazel_utils_python",
-    version = "0.2.14",
+    version = "0.3.0",
 )
 
 bazel_dep(name = "aspect_rules_py", version = "1.12.1")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.2.14")
+bazel_dep(name = "bazel_utils_core", version = "0.3.0")
 
 # Pinned here, not rules_py's default. sha256 from the release's sha256.sum:
 # https://github.com/astral-sh/uv/releases/download/0.12.23/sha256.sum
