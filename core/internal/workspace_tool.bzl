@@ -2,6 +2,7 @@
 
 load("@bazel_skylib//lib:shell.bzl", "shell")
 load("//internal:labels.bzl", _lock_label = "lock_label", _manifest_label = "manifest_label", _workspace_file_label = "workspace_file_label", _workspace_rel_dir = "workspace_rel_dir")
+load("//internal:launcher.bzl", "LAUNCHER_ATTRS", "launcher")
 load("//internal:runfiles.bzl", "rlocation")
 load("//internal:workspace_cd.bzl", "WORKSPACE_BASH")
 
@@ -170,18 +171,19 @@ def workspace_tool_impl(
         is_executable = True,
     )
 
-    runfiles_files = [script, tool, ctx.file.workspace]
+    run = launcher(ctx, script)
+    runfiles_files = [script, run.executable, tool, ctx.file.workspace]
     if manifest:
         runfiles_files.append(manifest)
     if config:
         runfiles_files.append(config)
-    runfiles = ctx.runfiles(files = runfiles_files)
+    runfiles = ctx.runfiles(files = runfiles_files + run.files)
     runfiles = runfiles.merge(tool_target[DefaultInfo].default_runfiles)
     if extra_runfiles:
         runfiles = runfiles.merge(extra_runfiles)
     return [DefaultInfo(
-        executable = script,
-        files = depset([script]),
+        executable = run.executable,
+        files = depset([run.executable]),
         runfiles = runfiles,
     )]
 
@@ -264,7 +266,7 @@ def workspace_tool_rule(
             allow_single_file = True,
             doc = "Repo-root marker used when BUILD_WORKSPACE_DIRECTORY is unset.",
         ),
-    }
+    } | LAUNCHER_ATTRS
     if use_manifest:
         attrs["manifest"] = attr.label(
             mandatory = True,

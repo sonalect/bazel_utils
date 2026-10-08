@@ -1,0 +1,9 @@
+# Staged at the buf_module root: workspace srcs keep their paths, and the
+# buf_deps tree is staged at `proto/` (its import root).
+version: v2
+modules:
+  - path: tests/buf/proto
+  - path: proto
+lint:
+  use:
+    - STANDARD

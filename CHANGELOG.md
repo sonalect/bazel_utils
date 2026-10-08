@@ -8,13 +8,67 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+### Removed
+
+- Cursor rules (`.cursor/`). Maintainer notes (versioning, the 2-day
+  release quarantine, pin locations, Windows/ash rules, testing) are in
+  `CLAUDE.md`.
+- **Breaking:** `bazel_utils_python` `pip_audit_test`; use `uv_audit_test`.
+  The module no longer ships pip-audit, its `uv.lock`, `pyproject.toml`, the
+  `bazel_utils_pypi` hub, or a Python toolchain, so no Python interpreter is
+  downloaded and Windows needs no bash for it.
+
 ### Added
 
+- `bazel_utils_python`: `uv_audit_test` runs `uv audit --frozen` on the
+  consumer `uv.lock` (all groups and extras, OSV) with the pinned prebuilt
+  uv. `flags` are `uv audit` flags (`--ignore`, `--no-dev`, `--no-group`, …)
+  and the binary override is `uv`. `uv audit` is a uv preview feature; the
+  wrapper opts in with `--preview-features audit-command`.
 - `bazel_utils_protoc`: `protoc-gen-protovalidate-buffa` catalog version
   v0.10.2 (optional and oneof strings get the plain-string format and length
   rules, `IGNORE_IF_ZERO_VALUE` covers field CEL and predefined rules, custom
   rule paths keep the extension's package and messages) for linux, darwin,
   and windows on amd64 and arm64.
+- `protoc-gen-buffa`, `protoc-gen-buffa-packaging`, `protoc-gen-connect-rust`:
+  windows-arm64 entries that use the x64 build (no aarch64 asset upstream;
+  Windows 11 on ARM runs it under emulation).
+- CI runs on all six platforms (linux, darwin, windows on amd64 and arm64)
+  for pull requests and release tags. Each job builds and tests `//...` and
+  runs the `*_format` targets, which must leave the checkout unchanged.
+  Windows jobs set a missing `--shell_executable`, so any use of a host bash
+  fails.
+- `//tests` fixtures for every public rule: `buf_deps`, `buf_module`,
+  `buf_generate` with all nine prebuilt plugins, `buf_plugin`,
+  `buf_lint_test`, `buf_format`, `golangci_test`, `govulncheck_test`,
+  `ruff_test`, `ruff_format`, `uv_audit_test`, `cargo_audit_test`
+  (buildifier and markdownlint run on the repo itself). Unit test for
+  `go_list_patterns`.
+
+### Fixed
+
+- `golangci_test`, `govulncheck_test`: run in the `go.mod` directory, with
+  `dirs` relative to it. A `go.mod` below the repo root (`//go:go.mod`) failed
+  with "directory prefix … does not contain main module" unless a root
+  `go.work` listed it.
+- Windows: no host bash. `bazel_utils_core` downloads busybox-w32
+  FRP-6075 (amd64, arm64). `*_test` and `*_format` rules (buildifier, buf
+  lint/format, golangci-lint, govulncheck, ruff, uv audit, cargo-audit,
+  markdownlint) return a `.bat` launcher that runs the wrapper with
+  `busybox sh` (Bazel on Windows does not run a `.bash` file), and
+  `buf_module` / `buf_generate` run their scripts with it instead of
+  `run_shell`. Wrapper scripts are ash-compatible (`;` PATH on Windows,
+  workspace search stops at `C:/`). `bazel_utils_core` now depends on
+  `bazel_lib` (batch runfiles lookup).
+- Windows: prebuilt binaries (buf, protoc plugins, ruff, golangci-lint,
+  cargo-audit) have a `.exe` output instead of `.bin`, so `bazel run` works
+  and `buf_generate` puts `.exe` plugins on PATH. `buf_plugin` keeps the
+  wrapped binary's extension.
+- `protoc.plugin` no longer needs host Python. Zip releases (Windows builds of
+  protoc-gen-go, protoc-gen-connect-go, protoc-gen-protovalidate-buffa) are
+  downloaded by the repository rule and extracted at build time with the
+  hermetic bsdtar from `tar.bzl` 0.10.9, only for the platform in use.
+  Bazel 9.2's own zip reader still crashes on protobuf-go's zip comment.
 
 ### Changed
 
@@ -28,8 +82,7 @@ patch; breaking Starlark API changes bump the minor.
   from 6.7.5 to 6.7.6, Node from 24.18.0 to 24.21.0, and pnpm from 11.20.0
   to 12.10.1. Both are newer than the rules' catalogs, so Node's sha256s
   (`node_repositories`) come from nodejs.org `SHASUMS256.txt` and pnpm's
-  `pnpm_version_integrity` from npm. `package.json` `packageManager` from
-  pnpm 12.6.0 to 12.10.1.
+  `pnpm_version_integrity` from npm. `package.json` `packageManager` from pnpm 12.6.0 to 12.10.1.
 
 ## [0.2.14] - 2026-10-07
 

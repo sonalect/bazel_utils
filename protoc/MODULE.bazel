@@ -8,6 +8,9 @@ module(
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "bazel_utils_core", version = "0.2.14")
 
+# Hermetic bsdtar extracts zip releases (//plugins:unzip.bzl).
+bazel_dep(name = "tar.bzl", version = "0.10.9")
+
 # Fallback when this module is root. The consumer's protoc.plugin tags win
 # per name and are what get downloaded.
 protoc = use_extension("//:extensions.bzl", "protoc")

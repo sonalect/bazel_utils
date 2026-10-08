@@ -4,7 +4,8 @@ golangci-lint shells out to `go env` / `go list`. The SDK is the one
 `go_sdk.from_file` already downloaded from go.mod — not host `go`.
 
 GO_SDK_BASH is concatenated into scripts (not str.format'd): bash ${var} is
-written as-is.
+written as-is. It follows RUNFILES_BASH (`_PATHSEP`) and must stay
+ash-compatible for busybox-w32 on Windows.
 """
 
 GO_TOOLCHAIN_TYPE = Label("@rules_go//go:toolchain")
@@ -14,10 +15,10 @@ _export_goroot() {
   local go_bin
   go_bin=$(realpath "$1")
   export GOROOT="$(dirname "$(dirname "$go_bin")")"
-  export PATH="$GOROOT/bin:${PATH:-}"
+  export PATH="$GOROOT/bin${_PATHSEP}${PATH:-}"
   export GOTOOLCHAIN=local
-  if [[ ! -x "$GOROOT/bin/go" ]]; then
-    echo "hermetic go is not executable: $GOROOT/bin/go (from $1)" >&2
+  if [[ ! -x "$go_bin" ]]; then
+    echo "hermetic go is not executable: $go_bin (from $1)" >&2
     exit 1
   fi
 }

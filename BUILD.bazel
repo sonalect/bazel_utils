@@ -36,6 +36,11 @@ test_suite(
 )
 
 test_suite(
+    name = "go_tests",
+    tests = ["@bazel_utils_go//:go_list_patterns_test"],
+)
+
+test_suite(
     name = "buf_tests",
     tests = [
         "@bazel_utils_buf//:dep_import_path_test",

@@ -5,5 +5,29 @@ module(
     version = "0.2.14",
 )
 
+bazel_dep(name = "bazel_lib", version = "3.7.0")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "platforms", version = "1.1.0")
+
+# busybox-w32 (https://frippery.org/busybox/): the shell for the bash wrappers
+# and actions on Windows, so no host bash (Git Bash, MSYS2) is needed.
+# sha256 from https://frippery.org/files/busybox/SHA256SUM.
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+_BUSYBOX = "FRP-6075-g169694ebd"
+
+http_file(
+    name = "busybox_windows_amd64",
+    downloaded_file_path = "busybox.exe",
+    executable = True,
+    sha256 = "07bb1e5b095b00d68a695481f9240879f33c5724b40aa2308f999d54ed78f075",
+    urls = ["https://frippery.org/files/busybox/busybox-w64-{}.exe".format(_BUSYBOX)],
+)
+
+http_file(
+    name = "busybox_windows_arm64",
+    downloaded_file_path = "busybox.exe",
+    executable = True,
+    sha256 = "e67f873d19d58c535cc9f0c4965ffd622e19b7bab87e3da89cb2185fb54464d7",
+    urls = ["https://frippery.org/files/busybox/busybox-w64a-{}.exe".format(_BUSYBOX)],
+)

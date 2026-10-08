@@ -1,5 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+load(":dirs_test.bzl", "go_list_patterns_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -17,7 +18,11 @@ native_binary(
         },
         no_match_error = "No prebuilt golangci-lint for this OS/CPU",
     ),
-    out = "golangci-lint.bin",
+    # Windows only runs files with an executable extension.
+    out = select({
+        "@bazel_utils_core//:windows": "golangci-lint.exe",
+        "//conditions:default": "golangci-lint.bin",
+    }),
 )
 
 # govulncheck from this module's go.mod (gazelle-generated binary in go_deps).
@@ -75,4 +80,9 @@ bzl_library(
         ":golangci",
         ":govulncheck_bzl",
     ],
+)
+
+go_list_patterns_test(
+    name = "go_list_patterns_test",
+    size = "small",
 )

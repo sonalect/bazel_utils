@@ -1,0 +1,10 @@
+load("@bazel_utils_buf//:buf.bzl", "buf_deps")
+
+# Import-only tree, staged at `proto/common/v1/common.proto` in the buf_module;
+# buf.yaml's `proto` module makes it `import "common/v1/common.proto"`.
+buf_deps(
+    name = "common",
+    srcs = ["proto/common/v1/common.proto"],
+    strip_import_prefix = "tests/buf/deps",
+    visibility = ["//tests/buf:__pkg__"],
+)

@@ -1,7 +1,7 @@
 """Workspace golangci-lint: cd to the consumer repo and run this module's binary."""
 
 load("@bazel_utils_core//internal:workspace_tool.bzl", "manifest_label", "workspace_file_label", "workspace_test_tags")
-load("//:dirs.bzl", "go_list_patterns")
+load("//:dirs.bzl", "GO_MODULE_DIR", "go_list_patterns")
 load("//:go_workspace_tool.bzl", "go_workspace_tool_rule")
 
 _golangci_test = go_workspace_tool_rule(
@@ -11,6 +11,7 @@ _golangci_test = go_workspace_tool_rule(
     flags_doc = "golangci-lint arguments after `run` and before package dirs.",
     doc = "bazel test: golangci-lint against the workspace (no-sandbox).",
     use_manifest = True,
+    pre_exec = GO_MODULE_DIR,
     use_config = True,
     config_flag = "--config",
 )
@@ -40,7 +41,9 @@ def golangci_test(
       manifest: Consumer go.mod from repo root (default `//:go.mod`; also `//go/go.mod`).
       config: Consumer golangci config (default `//:.golangci.yaml`).
       tags: Extra test tags; merged with the defaults above.
-      dirs: Bazel paths from repo root (e.g. `["//go"]` → `<root>/go/...`).
+      dirs: Bazel paths from repo root (e.g. `["//go/app"]`). The tool runs in the
+        `manifest` directory, so they become patterns relative to it
+        (`./app/...` for `//go:go.mod`). Empty checks the whole module.
       flags: Extra golangci-lint flags after `run` and before `dirs`.
       local: Run outside the sandbox (default True).
       **kwargs: Forwarded to the test rule (`golangci`, `size`, …).
@@ -51,7 +54,7 @@ def golangci_test(
         manifest = manifest_label(manifest),
         config = workspace_file_label(config, what = "config"),
         tags = workspace_test_tags(tags, requires_network = True),
-        flags = ["run"] + flags + go_list_patterns(dirs),
+        flags = ["run"] + flags + go_list_patterns(dirs, manifest_label(manifest)),
         local = local,
         **kwargs
     )

@@ -1,6 +1,7 @@
 """Workspace buf format: rewrite the module's proto files in the checkout."""
 
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_utils_core//internal:launcher.bzl", "LAUNCHER_ATTRS", "launcher")
 load(
     "@bazel_utils_core//internal:workspace_tool.bzl",
     "append_workspace_file",
@@ -42,11 +43,12 @@ fi
         content = "".join(chunks),
         is_executable = True,
     )
-    runfiles = ctx.runfiles(files = [script, buf_bin, ctx.file.workspace])
+    run = launcher(ctx, script)
+    runfiles = ctx.runfiles(files = [script, run.executable, buf_bin, ctx.file.workspace] + run.files)
     runfiles = runfiles.merge(ctx.attr.buf[DefaultInfo].default_runfiles)
     return [DefaultInfo(
-        executable = script,
-        files = depset([script]),
+        executable = run.executable,
+        files = depset([run.executable]),
         runfiles = runfiles,
     )]
 
@@ -79,7 +81,7 @@ format a copy — writes the consumer workspace after cd.
             allow_single_file = True,
             doc = "Prebuilt Buf CLI from GitHub releases (override to use another).",
         ),
-    },
+    } | LAUNCHER_ATTRS,
 )
 
 def buf_format(

@@ -45,7 +45,11 @@ native_binary(
         }},
         no_match_error = "No prebuilt buf for this OS/CPU",
     ),
-    out = "buf.bin",
+    # Windows only runs files with an executable extension.
+    out = select({{
+        "@bazel_utils_core//:windows": "buf.exe",
+        "//conditions:default": "buf.bin",
+    }}),
 )
 """.format(**files))
     rctx.file("REPO.bazel", "")
