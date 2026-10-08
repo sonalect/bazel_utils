@@ -8,6 +8,8 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-08
+
 ### Removed
 
 - Cursor rules (`.cursor/`). Maintainer notes (versioning, the 2-day
@@ -72,6 +74,8 @@ patch; breaking Starlark API changes bump the minor.
 
 ### Changed
 
+- Raised every language module and the aggregator to `0.3.0` (lockstep;
+  minor because `pip_audit_test` was removed).
 - `protoc-gen-protovalidate-buffa` pin from v0.10.1 to v0.10.2.
 - `bazel_utils_go`: rules_go from 0.63.0 to 0.64.1.
 - `bazel_utils_python`: ruff from 0.16.9 to 0.16.10.
@@ -299,7 +303,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.2.13...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/sonalect/bazel_utils/compare/v0.2.14...v0.3.0
 [0.2.14]: https://github.com/sonalect/bazel_utils/compare/v0.2.13...v0.2.14
 [0.2.13]: https://github.com/sonalect/bazel_utils/compare/v0.2.12...v0.2.13
 [0.2.12]: https://github.com/sonalect/bazel_utils/compare/v0.2.11...v0.2.12
