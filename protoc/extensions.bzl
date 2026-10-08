@@ -11,29 +11,10 @@ _CONSTRAINTS = {
     "windows_arm64": "@bazel_utils_core//:windows_arm64",
 }
 
-# Bazel 9.2 ZipReader crashes (ArrayIndexOutOfBoundsException) on zip comments
-# such as protobuf-go Windows releases. Host Python zipfile handles those zips.
-_ZIP_EXTRACT = """
-import pathlib
-import shutil
-import sys
-import zipfile
-
-archive, dest, strip = sys.argv[1], pathlib.Path(sys.argv[2]), sys.argv[3]
-dest.mkdir(parents=True, exist_ok=True)
-tmp = dest / "_zip_extract"
-if tmp.exists():
-    shutil.rmtree(tmp)
-tmp.mkdir()
-with zipfile.ZipFile(archive) as zf:
-    zf.extractall(tmp)
-root = tmp / strip if strip else tmp
-if not root.is_dir():
-    raise SystemExit("strip_prefix %r missing in zip" % strip)
-for child in root.iterdir():
-    shutil.move(str(child), str(dest / child.name))
-shutil.rmtree(tmp)
-"""
+# Bazel 9.2 ZipReader crashes on zip comments (protobuf-go Windows releases),
+# so zips are only downloaded here and extracted at build time by
+# //plugins:unzip.bzl with the hermetic bsdtar toolchain.
+_UNZIP_BZL = str(Label("//plugins:unzip.bzl"))
 
 def _plugin_url(plugin, version, spec):
     kwargs = {
@@ -49,6 +30,7 @@ def _plugin_repo_impl(rctx):
     plugin = PLUGINS[rctx.attr.plugin_name]
     platforms = json.decode(rctx.attr.platforms_json)
     files = {}
+    unzips = []
     for plat, spec in platforms.items():
         if plat not in _CONSTRAINTS:
             fail("protoc.plugin: unknown platform {} for {}".format(plat, rctx.attr.plugin_name))
@@ -64,33 +46,22 @@ def _plugin_repo_impl(rctx):
         elif plugin["kind"] == "archive":
             strip_prefix = spec.get("strip_prefix", plugin.get("strip_prefix", ""))
             if spec["file"].endswith(".zip"):
-                archive = "{}/_plugin.zip".format(plat)
+                archive = "{}/{}.zip".format(plat, spec["bin"])
                 rctx.download(
                     url = url,
                     output = archive,
                     sha256 = spec["sha256"],
                 )
-                python = rctx.which("python3")
-                if not python:
-                    python = rctx.which("python")
-                if not python:
-                    fail("protoc.plugin: python3 is required to extract zip for {}".format(
-                        rctx.attr.plugin_name,
-                    ))
-                result = rctx.execute([
-                    str(python),
-                    "-c",
-                    _ZIP_EXTRACT,
-                    archive,
-                    plat,
-                    strip_prefix,
-                ])
-                if result.return_code != 0:
-                    fail("protoc.plugin: zip extract failed for {}: {}".format(
-                        url,
-                        result.stderr or result.stdout,
-                    ))
-                rctx.delete(archive)
+                member = spec["bin"]
+                if strip_prefix:
+                    member = "{}/{}".format(strip_prefix.rstrip("/"), member)
+                unzips.append(struct(
+                    archive = archive,
+                    member = member,
+                    name = "{}_bin".format(plat),
+                    out = dest,
+                ))
+                dest = ":{}_bin".format(plat)
             else:
                 rctx.download_and_extract(
                     url = url,
@@ -108,11 +79,24 @@ def _plugin_repo_impl(rctx):
         if path:
             select_lines.append('            "{}": "{}",'.format(_CONSTRAINTS[plat], path))
 
+    unzip_targets = "".join([
+        """
+plugin_unzip(
+    name = "{name}",
+    archive = "{archive}",
+    member = "{member}",
+    out = "{out}",
+)
+""".format(name = u.name, archive = u.archive, member = u.member, out = u.out)
+        for u in unzips
+    ])
+
     rctx.file("BUILD.bazel", """\
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+load("{unzip_bzl}", "plugin_unzip")
 
 package(default_visibility = ["//visibility:public"])
-
+{unzip_targets}
 native_binary(
     name = "{name}",
     src = select(
@@ -121,11 +105,17 @@ native_binary(
         }},
         no_match_error = "No prebuilt {name} for this OS/CPU",
     ),
-    out = "{name}.bin",
+    # Windows only runs files with an executable extension.
+    out = select({{
+        "@bazel_utils_core//:windows": "{name}.exe",
+        "//conditions:default": "{name}.bin",
+    }}),
 )
 """.format(
         name = rctx.attr.plugin_name,
         select_body = "\n".join(select_lines),
+        unzip_bzl = _UNZIP_BZL,
+        unzip_targets = unzip_targets,
     ))
     rctx.file("REPO.bazel", "")
 

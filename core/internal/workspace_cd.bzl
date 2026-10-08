@@ -6,14 +6,23 @@ dirname of the marker is not the checkout. execroot/_main is Bazel's source
 overlay.
 
 These snippets are concatenated into scripts (not str.format'd): bash ${var}
-is written as-is.
+is written as-is. They also run under busybox-w32 sh on Windows
+(launcher.bzl), so keep them ash-compatible.
 """
 
 RUNFILES_BASH = """\
+# PATH separator: busybox-w32 on Windows uses `;`.
+case "$(uname -s)" in
+  Windows_NT) _PATHSEP=';' ;;
+  *) _PATHSEP=':' ;;
+esac
+
 _rf() {
   local path=$1
   local candidate
-  if [[ -n "${RUNFILES_DIR:-}" && -e "${RUNFILES_DIR}/${path}" ]]; then
+  # `${RUNFILES_DIR:-}` on both sides: busybox ash expands every `[[ … && … ]]`
+  # operand before testing, so a bare `${RUNFILES_DIR}` trips `set -u`.
+  if [[ -n "${RUNFILES_DIR:-}" && -e "${RUNFILES_DIR:-}/${path}" ]]; then
     candidate="${RUNFILES_DIR}/${path}"
   elif [[ -e "$0.runfiles/${path}" ]]; then
     candidate="$0.runfiles/${path}"
@@ -48,7 +57,8 @@ _workspace_dir() {
     return
   fi
   local p="${TEST_SRCDIR:-}"
-  while [[ -n "$p" && "$p" != "/" ]]; do
+  local parent
+  while [[ -n "$p" ]]; do
     if [[ "$(basename "$p")" == "bazel-out" ]]; then
       dir=$(dirname "$p")
       if [[ -f "$dir/MODULE.bazel" ]]; then
@@ -56,7 +66,10 @@ _workspace_dir() {
         return
       fi
     fi
-    p=$(dirname "$p")
+    # Stop at the root (`/` or `C:/`): dirname returns it unchanged.
+    parent=$(dirname "$p")
+    [[ "$parent" == "$p" ]] && break
+    p=$parent
   done
   echo "unable to locate workspace root (MODULE.bazel). marker=$marker TEST_SRCDIR=${TEST_SRCDIR:-}" >&2
   exit 1

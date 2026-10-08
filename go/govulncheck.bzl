@@ -1,7 +1,7 @@
 """Workspace govulncheck: cd to the consumer repo and run this module's binary."""
 
 load("@bazel_utils_core//internal:workspace_tool.bzl", "manifest_label", "workspace_test_tags")
-load("//:dirs.bzl", "go_list_patterns")
+load("//:dirs.bzl", "GO_MODULE_DIR", "go_list_patterns")
 load("//:go_workspace_tool.bzl", "go_workspace_tool_rule")
 
 _govulncheck_test = go_workspace_tool_rule(
@@ -11,6 +11,7 @@ _govulncheck_test = go_workspace_tool_rule(
     flags_doc = "govulncheck arguments after the binary and before package dirs.",
     doc = "bazel test: govulncheck against the workspace (no-sandbox, needs vuln.go.dev).",
     use_manifest = True,
+    pre_exec = GO_MODULE_DIR,
 )
 
 def govulncheck_test(
@@ -36,7 +37,9 @@ def govulncheck_test(
       workspace: Repo-root marker file (used when BUILD_WORKSPACE_DIRECTORY is unset).
       manifest: Consumer go.mod from repo root (default `//:go.mod`; also `//go/go.mod`).
       tags: Extra test tags; merged with the defaults above.
-      dirs: Bazel paths from repo root (e.g. `["//go"]` → `<root>/go/...`).
+      dirs: Bazel paths from repo root (e.g. `["//go/app"]`). The tool runs in the
+        `manifest` directory, so they become patterns relative to it
+        (`./app/...` for `//go:go.mod`). Empty checks the whole module.
       flags: Extra govulncheck flags before `dirs`.
       local: Run outside the sandbox (default True).
       **kwargs: Forwarded to the test rule (`govulncheck`, `size`, …).
@@ -46,7 +49,7 @@ def govulncheck_test(
         workspace = workspace,
         manifest = manifest_label(manifest),
         tags = workspace_test_tags(tags, requires_network = True),
-        flags = flags + go_list_patterns(dirs),
+        flags = flags + go_list_patterns(dirs, manifest_label(manifest)),
         local = local,
         **kwargs
     )

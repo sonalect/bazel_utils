@@ -1,9 +1,12 @@
 name: CI
 
+# Every public rule is exercised by //... (tests/, unit tests, lint) on all six
+# supported platforms. Runs for pull requests and release tags, not every push.
 on:
-  push:
-    branches: [main]
   pull_request:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -12,48 +15,125 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  BAZELISK_VERSION: 1.29.0
+
 jobs:
-  ci:
-    name: Bazel
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      BAZELISK_VERSION: 1.29.0
-      BAZELISK_SHA256: 5a408715e932c0250d28bd84555f12edbf70117de42f9181691c736eacc4a992
-      # Portable caches only. Do not persist output_user_root (~/.cache/bazel):
-      # it includes sandbox, execroot, and a live Bazel server.
-      BAZEL_DISK_CACHE: /home/runner/.cache/bazel-disk
-      BAZEL_REPO_CACHE: /home/runner/.cache/bazel-repo
+  bazel:
+    name: Bazel (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-amd64
+            runner: ubuntu-24.04
+            bazelisk: bazelisk-linux-amd64
+            bazelisk_sha256: 5a408715e932c0250d28bd84555f12edbf70117de42f9181691c736eacc4a992
+            bazel: bazel
+            shell: bash
+            cache_root: ~/.cache/bazel-ci
+          - platform: linux-arm64
+            runner: ubuntu-24.04-arm
+            bazelisk: bazelisk-linux-arm64
+            bazelisk_sha256: e20e8b0f4f240091b7a55bf17b9398bd4f40ee70ae0208dff95dd4c445fb4010
+            bazel: bazel
+            shell: bash
+            cache_root: ~/.cache/bazel-ci
+          - platform: darwin-amd64
+            runner: macos-15-intel
+            bazelisk: bazelisk-darwin-amd64
+            bazelisk_sha256: 16c3d7aa15323a9fb69f56c7ec5733ed18bedb786680d0ba13bb12a3c8083007
+            bazel: bazel
+            shell: bash
+            cache_root: ~/.cache/bazel-ci
+          - platform: darwin-arm64
+            runner: macos-15
+            bazelisk: bazelisk-darwin-arm64
+            bazelisk_sha256: cee851f726789227d5561004e9904a52be45c3efb56f8b38b6993d6adbaa0409
+            bazel: bazel
+            shell: bash
+            cache_root: ~/.cache/bazel-ci
+          - platform: windows-amd64
+            runner: windows-2025
+            bazelisk: bazelisk-windows-amd64.exe
+            bazelisk_sha256: 092a8738d5b41aae7a85c42cc961b1034e3389aba43ffc20c0fabda7b43e095b
+            bazel: bazel.exe
+            # PowerShell, not Git Bash, so Bazel does not inherit Git's Unix tools.
+            shell: pwsh
+            cache_root: C:/bazel-ci
+          - platform: windows-arm64
+            runner: windows-11-arm
+            bazelisk: bazelisk-windows-arm64.exe
+            bazelisk_sha256: 8bc42bd5d7857f18a21440b906469bb6c7cf91a7c72364d4b1e5ec56a76fe94f
+            bazel: bazel.exe
+            shell: pwsh
+            cache_root: C:/bazel-ci
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
     steps:
+      # Keep LF so buildifier, markdownlint, and `git diff` see the committed bytes.
+      - name: Disable CRLF conversion
+        shell: bash
+        run: git config --global core.autocrlf false
+
       - name: Check out repository
         uses: actions/checkout@v7.0.1
 
       - name: Install Bazelisk
+        shell: bash
+        env:
+          BAZELISK: ${{ matrix.bazelisk }}
+          BAZELISK_SHA256: ${{ matrix.bazelisk_sha256 }}
+          BAZEL_EXE: ${{ matrix.bazel }}
         run: |
           set -euo pipefail
-          curl -fsSL -o /tmp/bazelisk \
-            "https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64"
-          echo "${BAZELISK_SHA256}  /tmp/bazelisk" | sha256sum -c
-          sudo install -m 0755 /tmp/bazelisk /usr/local/bin/bazel
+          dir="${RUNNER_TEMP}/bazelisk"
+          mkdir -p "${dir}"
+          curl -fsSL -o "${dir}/${BAZEL_EXE}" \
+            "https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/${BAZELISK}"
+          if command -v sha256sum >/dev/null; then
+            echo "${BAZELISK_SHA256}  ${dir}/${BAZEL_EXE}" | sha256sum -c
+          else
+            echo "${BAZELISK_SHA256}  ${dir}/${BAZEL_EXE}" | shasum -a 256 -c
+          fi
+          chmod +x "${dir}/${BAZEL_EXE}"
+          echo "${dir}" >> "${GITHUB_PATH}"
 
       - name: Cache Bazel
         uses: actions/cache@v6.1.0
         with:
           path: |
-            ${{ env.BAZEL_DISK_CACHE }}
-            ${{ env.BAZEL_REPO_CACHE }}
+            ${{ matrix.cache_root }}
             ~/.cache/bazelisk
-          key: bazel-${{ runner.os }}-cas-${{ hashFiles('.bazelversion', 'MODULE.bazel.lock', 'markdown/pnpm-lock.yaml', 'python/uv.lock', 'go/go.sum') }}
+            ~/Library/Caches/bazelisk
+            ~/AppData/Local/bazelisk
+          key: bazel-${{ matrix.platform }}-${{ hashFiles('.bazelversion', 'MODULE.bazel.lock', 'markdown/pnpm-lock.yaml', 'go/go.sum') }}
           restore-keys: |
-            bazel-${{ runner.os }}-cas-
+            bazel-${{ matrix.platform }}-
 
-      - name: Configure Bazel caches
+      # Portable caches only. Do not persist output_user_root: it includes the
+      # sandbox, execroot, and a live Bazel server.
+      - name: Configure Bazel
+        shell: bash
+        env:
+          CACHE_ROOT: ${{ matrix.cache_root }}
         run: |
           set -euo pipefail
-          mkdir -p "${BAZEL_DISK_CACHE}" "${BAZEL_REPO_CACHE}"
+          root="${CACHE_ROOT/#\~/${HOME}}"
+          mkdir -p "${root}/disk" "${root}/repo"
           {
-            echo "common --disk_cache=${BAZEL_DISK_CACHE}"
-            echo "common --repository_cache=${BAZEL_REPO_CACHE}"
+            if [[ "${RUNNER_OS}" == Windows ]]; then
+              # Short output root: Windows MAX_PATH.
+              echo "startup --output_user_root=C:/b"
+              # No host bash: bazel_utils runs its scripts with busybox-w32, so
+              # anything that still reaches for Bazel's shell fails loudly.
+              echo "common --shell_executable=C:/no-host-bash/bash.exe"
+            fi
+            echo "common --disk_cache=${root}/disk"
+            echo "common --repository_cache=${root}/repo"
           } >> "${HOME}/.bazelrc"
 
       - name: Build
@@ -62,7 +142,20 @@ jobs:
       - name: Test
         run: bazel test //... --keep_going --test_output=errors
 
-      # Stop the server so repository/disk caches are idle before actions/cache tars them.
+      # `bazel run` targets: each must run and leave the checkout unchanged.
+      - name: Run buildifier_format
+        run: bazel run //:format
+
+      - name: Run buf_format
+        run: bazel run //tests/buf:format
+
+      - name: Run ruff_format
+        run: bazel run //tests/python:format
+
+      - name: Check formatters left no changes
+        run: git diff --exit-code
+
+      # Stop the server so repository/disk caches are idle before actions/cache saves them.
       - name: Stop Bazel
         if: always()
         run: bazel shutdown

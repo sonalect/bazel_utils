@@ -17,7 +17,11 @@ native_binary(
         },
         no_match_error = "No prebuilt cargo-audit for this OS/CPU",
     ),
-    out = "cargo-audit.bin",
+    # Windows only runs files with an executable extension.
+    out = select({
+        "@bazel_utils_core//:windows": "cargo-audit.exe",
+        "//conditions:default": "cargo-audit.bin",
+    }),
 )
 
 bzl_library(
@@ -25,6 +29,7 @@ bzl_library(
     srcs = ["cargo_audit.bzl"],
     deps = [
         "@bazel_skylib//lib:shell",
+        "@bazel_utils_core//internal:launcher",
         "@bazel_utils_core//internal:workspace_tool",
     ],
 )

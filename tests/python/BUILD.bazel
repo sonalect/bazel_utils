@@ -1,0 +1,24 @@
+load("@bazel_utils_python//:python.bzl", "ruff_format", "ruff_test", "uv_audit_test")
+
+# Fixture project with no dependencies: the audit result does not change when
+# new advisories are published.
+
+uv_audit_test(
+    name = "audit",
+    size = "medium",
+    lock = "//tests/python:uv.lock",
+    manifest = "//tests/python:pyproject.toml",
+)
+
+ruff_test(
+    name = "lint",
+    size = "small",
+    dirs = ["//tests/python"],
+    manifest = "//tests/python:pyproject.toml",
+)
+
+ruff_format(
+    name = "format",
+    dirs = ["//tests/python"],
+    manifest = "//tests/python:pyproject.toml",
+)

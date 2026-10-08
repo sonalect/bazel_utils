@@ -12,13 +12,15 @@ Current module version: **0.2.14**. See [CHANGELOG.md](CHANGELOG.md) for release
 | [`bazel_utils_buf`](#bazel_utils_buf)       | `@bazel_utils_buf//:buf.bzl`           | `buf_deps`, `buf_module`, `buf_generate`, `buf_lint_test`, `buf_format`, `buf_plugin` |
 | [`bazel_utils_protoc`](#bazel_utils_protoc) | `@bazel_utils_protoc//:extensions.bzl` | prebuilt `protoc-gen-*` (`protoc.plugin`)                                             |
 | [`bazel_utils_go`](#bazel_utils_go)         | `@bazel_utils_go//:go.bzl`             | `golangci_test`, `govulncheck_test`                                                   |
-| [`bazel_utils_python`](#bazel_utils_python) | `@bazel_utils_python//:python.bzl`     | `ruff_test`, `ruff_format`, `pip_audit_test`                                          |
+| [`bazel_utils_python`](#bazel_utils_python) | `@bazel_utils_python//:python.bzl`     | `ruff_test`, `ruff_format`, `uv_audit_test`                                           |
 | [`bazel_utils_rust`](#bazel_utils_rust)     | `@bazel_utils_rust//:rust.bzl`         | `cargo_audit_test`                                                                    |
 | [`bazel_utils_md`](#bazel_utils_md)         | `@bazel_utils_md//:markdown.bzl`       | `markdownlint_test`                                                                   |
 
 Workspace-cd tests (`*_test` macros that `cd` to the consumer repo) default `local = True` and tags `external`, `no-cache`, `no-sandbox`. Networked tests also add `requires-network`. Config files stay in the consumer (`go.mod`, `pyproject.toml`, `buf.yaml`, `.golangci.yaml`, …).
 
-Pass `buildifier` / `golangci` / `govulncheck` / `buf` / `ruff` / `pip_audit` / `cargo_audit` / `markdownlint` only to replace this module's binary.
+Pass `buildifier` / `golangci` / `govulncheck` / `buf` / `ruff` / `uv` / `cargo_audit` / `markdownlint` only to replace this module's binary.
+
+Windows needs no host bash (Git Bash, MSYS2) or Python. `bazel_utils_core` downloads [busybox-w32](https://frippery.org/busybox/) (amd64, arm64): the `*_test` and `*_format` wrappers run through a `.bat` launcher with `busybox sh`, and `buf_module` / `buf_generate` actions run with it too. Linux and macOS use the system bash. Prebuilt binaries have a `.exe` output on Windows. `protoc.plugin` zip releases are extracted at build time with the hermetic bsdtar from [tar.bzl](https://registry.bazel.build/modules/tar.bzl); no host Python or unzip is used.
 
 Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.2.14` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
 
@@ -227,17 +229,17 @@ buf_generate(
 
 GitHub-release binaries from [`bazel_utils_protoc`](#bazel_utils_protoc). Tag them with `protoc.plugin` in the root module; `buf_generate` puts those on PATH. Do not also list them in `plugins` unless you need an extra binary or an override. This module re-exports the same binaries at `@bazel_utils_buf//protoc/plugins/…`. The target **name** is the PATH name (`local:` in the template). Do not wrap them with `buf_plugin`.
 
-| Label                                                             | Upstream                                                                                                | Catalog versions          | Platforms                                                        |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0                   | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0, v0.9.1            | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0            | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12                  | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0, v0.10.1, v0.10.2 | linux/darwin/windows amd64+arm64                                 |
+| Label                                                             | Upstream                                                                                                | Catalog versions          | Platforms                                                           |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------- |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2                    | linux/darwin/windows amd64+arm64 (windows-arm64 runs the x64 build) |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2                    | linux/darwin/windows amd64+arm64 (windows-arm64 runs the x64 build) |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0                   | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0, v0.9.1            | linux/darwin/windows amd64+arm64 (windows-arm64 runs the x64 build) |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0            | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12                  | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0, v0.10.1, v0.10.2 | linux/darwin/windows amd64+arm64                                    |
 
 ```starlark
 load("@bazel_utils_buf//:buf.bzl", "buf_generate")
@@ -390,17 +392,17 @@ Module-extension tag. One per plugin name per module; the root module's tag wins
 | `name`    | `string` | yes      | —       | PATH name (`protoc-gen-buffa`, `protoc-gen-buffa-packaging`, `protoc-gen-connect-go`, `protoc-gen-connect-rust`, `protoc-gen-contract-rust`, `protoc-gen-go`, `protoc-gen-grpc-gateway`, `protoc-gen-openapiv2`, `protoc-gen-protovalidate-buffa`). |
 | `version` | `string` | yes      | —       | GitHub release tag (must exist in this module's `plugins/<name>/registry.bzl`).                                                                                                                                                                     |
 
-| Label                                                         | Upstream                                                                                                | Catalog versions          | Platforms                                                        |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
-| `@bazel_utils_protoc//plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0                   | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0, v0.9.1            | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0            | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12                  | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0, v0.10.1, v0.10.2 | linux/darwin/windows amd64+arm64                                 |
+| Label                                                         | Upstream                                                                                                | Catalog versions          | Platforms                                                           |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------- |
+| `@bazel_utils_protoc//plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2                    | linux/darwin/windows amd64+arm64 (windows-arm64 runs the x64 build) |
+| `@bazel_utils_protoc//plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2                    | linux/darwin/windows amd64+arm64 (windows-arm64 runs the x64 build) |
+| `@bazel_utils_protoc//plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0                   | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_protoc//plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0, v0.9.1            | linux/darwin/windows amd64+arm64 (windows-arm64 runs the x64 build) |
+| `@bazel_utils_protoc//plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0            | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_protoc//plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12                  | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_protoc//plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_protoc//plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_protoc//plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0, v0.10.1, v0.10.2 | linux/darwin/windows amd64+arm64                                    |
 
 ---
 
@@ -408,7 +410,7 @@ Module-extension tag. One per plugin name per module; the root module's tag wins
 
 Prebuilt [golangci-lint](https://github.com/golangci/golangci-lint) (GitHub release) and [govulncheck](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck) (pinned in this module's `go.mod`). `go list` still uses the **consumer's** rules_go SDK.
 
-`dirs` are Bazel paths from the repo root (`"//go"` → `<root>/go/...`).
+Both tools run in the `manifest` (`go.mod`) directory, so `go.mod` may be below the repo root (`//go:go.mod`). `dirs` are Bazel paths from the repo root and must be inside that module: with `//go:go.mod`, `"//go/app"` → `./app/...`. Empty `dirs` checks the whole module.
 
 ### Add to a Bazel project
 
@@ -440,7 +442,7 @@ load("@bazel_utils_go//:go.bzl", "golangci_test", "govulncheck_test")
 | `manifest`  | `label`       | no       | `"//:go.mod"`         | Consumer `go.mod`.                                                                |
 | `config`    | `label`       | no       | `"//:.golangci.yaml"` | Consumer `.golangci.yaml`.                                                        |
 | `tags`      | `string_list` | no       | `[]`                  | Extra tags; merged with `external`, `no-cache`, `no-sandbox`, `requires-network`. |
-| `dirs`      | `string_list` | no       | `[]`                  | Bazel paths from the repo root (`"//go"` → `<root>/go/...`).                      |
+| `dirs`      | `string_list` | no       | `[]`                  | Bazel paths inside the module (`"//go/app"` → `./app/...` for `//go:go.mod`).     |
 | `flags`     | `string_list` | no       | `[]`                  | Extra argv after `golangci-lint run`.                                             |
 | `local`     | `bool`        | no       | `True`                | Bazel `local` test attribute.                                                     |
 | `golangci`  | `label`       | no       | this module's binary  | Override the pinned golangci-lint.                                                |
@@ -463,7 +465,7 @@ golangci_test(
 | `workspace`   | `label`       | no       | `"//:MODULE.bazel"`  | Repo-root marker when `BUILD_WORKSPACE_DIRECTORY` is unset.                       |
 | `manifest`    | `label`       | no       | `"//:go.mod"`        | Consumer `go.mod`.                                                                |
 | `tags`        | `string_list` | no       | `[]`                 | Extra tags; merged with `external`, `no-cache`, `no-sandbox`, `requires-network`. |
-| `dirs`        | `string_list` | no       | `[]`                 | Bazel paths from the repo root (`"//go"` → `<root>/go/...`).                      |
+| `dirs`        | `string_list` | no       | `[]`                 | Bazel paths inside the module (`"//go/app"` → `./app/...` for `//go:go.mod`).     |
 | `flags`       | `string_list` | no       | `[]`                 | Extra govulncheck argv.                                                           |
 | `local`       | `bool`        | no       | `True`               | Bazel `local` test attribute.                                                     |
 | `govulncheck` | `label`       | no       | this module's binary | Override the pinned govulncheck.                                                  |
@@ -480,7 +482,7 @@ govulncheck_test(
 
 ## bazel_utils_python
 
-Prebuilt [ruff](https://github.com/astral-sh/ruff) (GitHub release) and [pip-audit](https://pypi.org/project/pip-audit/) (pinned in this module's `uv.lock`). Ruff config is the consumer `pyproject.toml` (`[tool.ruff]`).
+Prebuilt [ruff](https://github.com/astral-sh/ruff) and [uv](https://github.com/astral-sh/uv) (GitHub releases; uv is pinned in this module's `uv_bin.toolchain`). Ruff config is the consumer `pyproject.toml` (`[tool.ruff]`). No Python interpreter is downloaded or needed.
 
 `dirs` are Bazel paths from the repo root (`"//python"` → `python`).
 
@@ -500,7 +502,7 @@ git_override(
 
 ```starlark
 # python/BUILD.bazel
-load("@bazel_utils_python//:python.bzl", "pip_audit_test", "ruff_format", "ruff_test")
+load("@bazel_utils_python//:python.bzl", "ruff_format", "ruff_test", "uv_audit_test")
 ```
 
 ### `ruff_test`
@@ -546,24 +548,24 @@ ruff_format(
 )
 ```
 
-### `pip_audit_test`
+### `uv_audit_test`
 
-`bazel test`: `uv export --frozen --all-groups` from the consumer lock, then `pip-audit -r … --disable-pip`. Needs OSV (`requires-network`).
+`bazel test`: `uv audit --frozen` on the consumer lock (all dependency groups and extras) against [OSV](https://osv.dev). Needs network (`requires-network`). `uv audit` is a uv preview feature; the wrapper opts in with `--preview-features audit-command`.
 
 | Name        | Type          | Required | Default               | Description                                                                       |
 | ----------- | ------------- | -------- | --------------------- | --------------------------------------------------------------------------------- |
 | `name`      | `string`      | yes      | —                     | Target name.                                                                      |
 | `workspace` | `label`       | no       | `"//:MODULE.bazel"`   | Repo-root marker when `BUILD_WORKSPACE_DIRECTORY` is unset.                       |
-| `lock`      | `label`       | no       | `"//:uv.lock"`        | Consumer `uv.lock` (`uv export --frozen --all-groups`).                           |
-| `manifest`  | `label`       | no       | `"//:pyproject.toml"` | Consumer `pyproject.toml`.                                                        |
+| `lock`      | `label`       | no       | `"//:uv.lock"`        | Consumer `uv.lock`.                                                               |
+| `manifest`  | `label`       | no       | `"//:pyproject.toml"` | Consumer `pyproject.toml` next to the lock (the uv project root).                 |
 | `tags`      | `string_list` | no       | `[]`                  | Extra tags; merged with `external`, `no-cache`, `no-sandbox`, `requires-network`. |
-| `flags`     | `string_list` | no       | `[]`                  | Extra pip-audit argv.                                                             |
+| `flags`     | `string_list` | no       | `[]`                  | Extra `uv audit` flags (`--ignore`, `--no-dev`, `--no-group`, …).                 |
 | `local`     | `bool`        | no       | `True`                | Bazel `local` test attribute.                                                     |
-| `pip_audit` | `label`       | no       | this module's binary  | Override the pinned pip-audit.                                                    |
+| `uv`        | `label`       | no       | this module's binary  | Override the pinned uv.                                                           |
 | `size`      | `string`      | no       | Bazel test default    | Bazel test size.                                                                  |
 
 ```starlark
-pip_audit_test(
+uv_audit_test(
     name = "vuln",
 )
 ```

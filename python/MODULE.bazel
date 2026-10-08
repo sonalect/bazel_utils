@@ -1,4 +1,4 @@
-"""pip-audit from this module's uv.lock; prebuilt ruff from GitHub."""
+"""Prebuilt uv (uv audit) and ruff from GitHub releases."""
 
 module(
     name = "bazel_utils_python",
@@ -8,11 +8,6 @@ module(
 bazel_dep(name = "aspect_rules_py", version = "1.12.1")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "bazel_utils_core", version = "0.2.14")
-bazel_dep(name = "rules_python", version = "2.3.4")
-
-python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.defaults(python_version = "3.14")
-python.toolchain(python_version = "3.14")
 
 # Pinned here, not rules_py's default. sha256 from the release's sha256.sum:
 # https://github.com/astral-sh/uv/releases/download/0.12.23/sha256.sum
@@ -29,21 +24,5 @@ uv_bin.toolchain(
     version = "0.12.23",
 )
 use_repo(uv_bin, "uv")
-
-uv = use_extension("@aspect_rules_py//uv/unstable:extension.bzl", "uv")
-uv.declare_hub(
-    hub_name = "bazel_utils_pypi",
-)
-uv.project(
-    default_build_dependencies = [
-        "setuptools",
-        "build",
-        "wheel",
-    ],
-    hub_name = "bazel_utils_pypi",
-    lock = "//:uv.lock",
-    pyproject = "//:pyproject.toml",
-)
-use_repo(uv, "bazel_utils_pypi")
 
 include("//:ruff.MODULE.bazel")

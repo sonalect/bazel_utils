@@ -7,6 +7,7 @@ name prefers the explicit target. `remote:` plugins and `buf.yaml` `deps`
 are fetched from the BSR (needs network).
 """
 
+load("@bazel_utils_core//internal:launcher.bzl", "SHELL_ACTION_ATTRS", "run_shell_action")
 load("@protoc_root_plugins//:plugins.bzl", "ROOT_PLUGIN_LABELS")
 
 BufGeneratedInfo = provider(
@@ -121,15 +122,24 @@ def _plugin_path_lines(ctx):
     (not inside) `$WORKDIR` so `find` during generate does not see them.
 
     Unix: extensionless bash wrapper named after the target (buf LookPath).
-    Windows: `buf.exe` is a native binary; Go LookPath only finds PATHEXT
-    (`.exe`, `.bat`, …), so an extensionless script is "not found in %PATH%".
-    Copy the real plugin as `name.exe` when it is already an `.exe` (stdin
-    stays on the binary). Otherwise write a `.bat` that execs the real path.
+    Windows (busybox-w32 sh): Go LookPath only finds PATHEXT names (`.exe`,
+    `.bat`, …). Copy the plugin as `name.exe` when it is an `.exe` (stdin stays
+    on the binary); otherwise write a `.bat` that runs the real path.
     """
     lines = [
         "install_plugin_on_path() {",
         '  local name="$1"',
         '  local plugin="$2"',
+        '  if [[ "$_WINDOWS" == 1 ]]; then',
+        '    if [[ "$plugin" == *.exe ]]; then',
+        '      cp -f "$plugin" "$PLUGIN_BIN/${name}.exe"',
+        "    else",
+        "      local win",
+        "      win=$(printf '%s' \"$plugin\" | tr / '\\\\')",
+        "      printf '@echo off\\r\\n\"%s\" %%*\\r\\n' \"$win\" > \"$PLUGIN_BIN/${name}.bat\"",
+        "    fi",
+        "    return",
+        "  fi",
         # Quote $@ so it is expanded when buf invokes the wrapper, not when
         # this function writes the wrapper (unquoted EOF would bake in "").
         '  cat > "$PLUGIN_BIN/$name" <<EOF',
@@ -137,15 +147,6 @@ def _plugin_path_lines(ctx):
         'exec "$plugin" "\\$@"',
         "EOF",
         '  chmod +x "$PLUGIN_BIN/$name"',
-        '  if [[ "$plugin" == *.exe ]]; then',
-        '    cp -f "$plugin" "$PLUGIN_BIN/${name}.exe"',
-        '  elif command -v cygpath >/dev/null 2>&1 || uname -s 2>/dev/null | grep -qiE "mingw|msys|cygwin"; then',
-        '    local win="$plugin"',
-        "    if command -v cygpath >/dev/null 2>&1; then",
-        '      win="$(cygpath -w "$plugin")"',
-        "    fi",
-        "    printf '@echo off\\r\\n\"%s\" %%*\\r\\n' \"$win\" > \"$PLUGIN_BIN/${name}.bat\"",
-        "  fi",
         "}",
     ]
     for i, target in enumerate(_plugin_targets(ctx)):
@@ -155,12 +156,8 @@ def _plugin_path_lines(ctx):
         name = target.label.name
         lines.append('PLUGIN_{}="$(realpath "{}")"'.format(i, exe.path))
         lines.append('install_plugin_on_path "{}" "$PLUGIN_{}"'.format(name, i))
-    lines.append('export PATH="$PLUGIN_BIN:$PATH"')
     lines.extend([
-        # Native buf.exe does not search MSYS `/c/...` PATH entries.
-        "if command -v cygpath >/dev/null 2>&1; then",
-        '  export PATH="$(cygpath -w "$PLUGIN_BIN");$PATH"',
-        "fi",
+        'export PATH="$PLUGIN_BIN${_PATHSEP}$PATH"',
         'export HOME="$HOME_DIR"',
         'export BUF_CACHE_DIR="$BUF_CACHE_DIR"',
     ])
@@ -171,6 +168,8 @@ def _workdir_lines(ctx, buf_bin, module_dir):
     prefix = ctx.label.name
     return [
         "set -euo pipefail",
+        # busybox-w32 on a Windows exec platform: `;` PATH, `.exe`/`.bat` plugins.
+        'case "$(uname -s)" in Windows_NT) _WINDOWS=1; _PATHSEP=";" ;; *) _WINDOWS=0; _PATHSEP=":" ;; esac',
         'BUF="$(realpath "{}")"'.format(buf_bin.path),
         'WORKDIR="$PWD/{}.work"'.format(prefix),
         'PLUGIN_BIN="$PWD/{}.plugin_bin"'.format(prefix),
@@ -193,7 +192,8 @@ def _run_buf(ctx, *, module_dir, outputs, extra_inputs, extra_tools, lines, mnem
     token = ctx.configuration.default_shell_env.get("BUF_TOKEN")
     if token:
         env["BUF_TOKEN"] = token
-    ctx.actions.run_shell(
+    run_shell_action(
+        ctx,
         outputs = outputs,
         inputs = depset(
             direct = [module_dir] + extra_inputs,
@@ -329,7 +329,7 @@ for write_source_files.
             doc = "Root-module `protoc.plugin` tags (`@protoc_root_plugins//:<name>`).",
         ),
         "buf": _BUF_ATTR,
-    },
+    } | SHELL_ACTION_ATTRS,
 )
 
 def _buf_deps_impl(ctx):
@@ -406,7 +406,8 @@ def _buf_module_impl(ctx):
         src = staged[rel]
         lines.append('mkdir -p "$OUT/$(dirname "{}")"'.format(rel))
         lines.append('cp "{}" "$OUT/{}"'.format(src.path, rel))
-    ctx.actions.run_shell(
+    run_shell_action(
+        ctx,
         outputs = [out],
         inputs = depset(direct = [ctx.file.config] + ctx.files.srcs + dep_files),
         command = "\n".join(lines),
@@ -446,7 +447,7 @@ _buf_module = rule(
             mandatory = True,
             doc = "Consumer buf.yaml.",
         ),
-    },
+    } | SHELL_ACTION_ATTRS,
 )
 
 def buf_module(

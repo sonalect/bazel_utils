@@ -6,6 +6,7 @@ file list is passed to the binary without `-r`.
 """
 
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_utils_core//internal:launcher.bzl", "LAUNCHER_ATTRS", "launcher")
 load(
     "@bazel_utils_core//internal:workspace_tool.bzl",
     "workspace_test_tags",
@@ -60,11 +61,12 @@ def _buildifier_impl(ctx):
         content = "".join(chunks),
         is_executable = True,
     )
-    runfiles = ctx.runfiles(files = [script, tool, ctx.file.workspace])
+    run = launcher(ctx, script)
+    runfiles = ctx.runfiles(files = [script, run.executable, tool, ctx.file.workspace] + run.files)
     runfiles = runfiles.merge(ctx.attr.buildifier[DefaultInfo].default_runfiles)
     return [DefaultInfo(
-        executable = script,
-        files = depset([script]),
+        executable = run.executable,
+        files = depset([run.executable]),
         runfiles = runfiles,
     )]
 
@@ -91,14 +93,14 @@ _BUILDIFIER_ATTRS = {
 _buildifier_test = rule(
     implementation = _buildifier_impl,
     test = True,
-    attrs = dict(_BUILDIFIER_ATTRS),
+    attrs = _BUILDIFIER_ATTRS | LAUNCHER_ATTRS,
     doc = "bazel test: check Starlark files in the workspace (no-sandbox).",
 )
 
 _buildifier_format = rule(
     implementation = _buildifier_impl,
     executable = True,
-    attrs = dict(_BUILDIFIER_ATTRS),
+    attrs = _BUILDIFIER_ATTRS | LAUNCHER_ATTRS,
     doc = "bazel run: format Starlark files in the workspace.",
 )
 

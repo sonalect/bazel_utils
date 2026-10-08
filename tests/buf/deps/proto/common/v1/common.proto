@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "example.com/common/v1;commonv1";
+
+// Shared text payload, imported through buf_deps.
+message Text {
+  // Free-form text.
+  string value = 1;
+}

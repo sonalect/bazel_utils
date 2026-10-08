@@ -1,0 +1,18 @@
+load("@bazel_utils_go//:go.bzl", "golangci_test", "govulncheck_test")
+
+# Fixture module with go.mod below the workspace root: the Go wrappers run in
+# the go.mod directory.
+
+golangci_test(
+    name = "lint",
+    size = "small",
+    config = "//tests/go:.golangci.yaml",
+    manifest = "//tests/go:go.mod",
+)
+
+govulncheck_test(
+    name = "vuln",
+    size = "medium",
+    dirs = ["//tests/go"],
+    manifest = "//tests/go:go.mod",
+)

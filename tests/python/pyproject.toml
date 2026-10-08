@@ -1,0 +1,13 @@
+# Smoke project for uv_audit_test: no dependencies, so the result does not
+# change when new advisories are published.
+[project]
+name = "uv-audit-smoke"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100

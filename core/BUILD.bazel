@@ -32,6 +32,12 @@ config_setting(
     ],
 )
 
+# Any Windows CPU: `.exe` outputs for native_binary.
+config_setting(
+    name = "windows",
+    constraint_values = ["@platforms//os:windows"],
+)
+
 config_setting(
     name = "windows_amd64",
     constraint_values = [
@@ -46,4 +52,20 @@ config_setting(
         "@platforms//os:windows",
         "@platforms//cpu:arm64",
     ],
+)
+
+# Windows shell for the bash wrappers and actions (see internal/launcher.bzl).
+# Empty elsewhere: Linux and macOS use the system bash.
+alias(
+    name = "busybox",
+    actual = select({
+        ":windows_amd64": "@busybox_windows_amd64//file",
+        ":windows_arm64": "@busybox_windows_arm64//file",
+        "//conditions:default": ":no_busybox",
+    }),
+)
+
+filegroup(
+    name = "no_busybox",
+    srcs = [],
 )

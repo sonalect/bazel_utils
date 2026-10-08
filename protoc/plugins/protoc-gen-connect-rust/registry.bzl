@@ -39,6 +39,13 @@ PLUGIN = {
                 "file": "windows-x86_64.exe",
                 "sha256": "cfb22284fe46063203b50d096a8829d364d0cbafce5f80dd1903da0734ec56f3",
             },
+            # No aarch64 asset upstream: Windows 11 on ARM runs the x64 build
+            # under emulation.
+            "windows_arm64": {
+                "bin": "protoc-gen-connect-rust.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "cfb22284fe46063203b50d096a8829d364d0cbafce5f80dd1903da0734ec56f3",
+            },
         },
         "v0.9.1": {
             "linux_amd64": {
@@ -62,6 +69,13 @@ PLUGIN = {
                 "sha256": "8efc5fcce492d9e9e4bc540bfefc9b7651c7b6780ba9b833d22dbd2358c7286c",
             },
             "windows_amd64": {
+                "bin": "protoc-gen-connect-rust.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "5887b8f240a48d8009e868dbe08096b5a73e343d9140979e1bc844d7b49e3e0e",
+            },
+            # No aarch64 asset upstream: Windows 11 on ARM runs the x64 build
+            # under emulation.
+            "windows_arm64": {
                 "bin": "protoc-gen-connect-rust.exe",
                 "file": "windows-x86_64.exe",
                 "sha256": "5887b8f240a48d8009e868dbe08096b5a73e343d9140979e1bc844d7b49e3e0e",

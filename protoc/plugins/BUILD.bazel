@@ -17,3 +17,8 @@ bzl_library(
         "//plugins/protoc-gen-protovalidate-buffa:registry_bzl",
     ],
 )
+
+bzl_library(
+    name = "unzip_bzl",
+    srcs = ["unzip.bzl"],
+)

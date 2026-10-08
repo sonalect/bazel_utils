@@ -39,6 +39,13 @@ PLUGIN = {
                 "file": "windows-x86_64.exe",
                 "sha256": "d6346bda11fa0845f46e43935a2c17beb5dcfe56b96db9109a4db88ea0f47814",
             },
+            # No aarch64 asset upstream: Windows 11 on ARM runs the x64 build
+            # under emulation.
+            "windows_arm64": {
+                "bin": "protoc-gen-buffa.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "d6346bda11fa0845f46e43935a2c17beb5dcfe56b96db9109a4db88ea0f47814",
+            },
         },
     },
 }

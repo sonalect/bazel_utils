@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package smoke.v1;
+
+import "common/v1/common.proto";
+
+option go_package = "example.com/smoke/v1;smokev1";
+
+// Smoke-test service: every prebuilt plugin has something to generate.
+service PingService {
+  // Echo the text back.
+  rpc Ping(PingRequest) returns (PingResponse);
+}
+
+// Ping request.
+message PingRequest {
+  // Text to echo.
+  common.v1.Text text = 1;
+}
+
+// Ping response.
+message PingResponse {
+  // Echoed text.
+  common.v1.Text text = 1;
+}

@@ -1,0 +1,8 @@
+# Fixture for cargo_audit_test: no dependencies, so the result does not change
+# when new advisories are published.
+[package]
+name = "smoke"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]

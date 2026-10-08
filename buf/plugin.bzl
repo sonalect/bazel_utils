@@ -17,7 +17,10 @@ def _buf_plugin_impl(ctx):
     exe = actual.files_to_run.executable
     if not exe:
         fail("{}: actual {} has no executable".format(ctx.label, ctx.attr.actual.label))
-    out = ctx.actions.declare_file(ctx.label.name)
+
+    # Keep `.exe` (and any other extension): Windows only runs files with an
+    # executable extension. buf_generate uses the target name for PATH.
+    out = ctx.actions.declare_file(ctx.label.name + ("." + exe.extension if exe.extension else ""))
     ctx.actions.symlink(output = out, target_file = exe, is_executable = True)
     runfiles = ctx.runfiles(files = [out]).merge(actual.default_runfiles)
     return [DefaultInfo(

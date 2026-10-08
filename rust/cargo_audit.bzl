@@ -1,6 +1,7 @@
 """Workspace cargo-audit: audit locked crates from the consumer Cargo.lock."""
 
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_utils_core//internal:launcher.bzl", "LAUNCHER_ATTRS", "launcher")
 load("@bazel_utils_core//internal:workspace_tool.bzl", "append_workspace_file", "lock_label", "manifest_label", "workspace_test_tags", "wrapper_script_header")
 
 def _impl(ctx):
@@ -30,7 +31,7 @@ def _impl(ctx):
         "# tame-index runs `$CARGO -V` (else `cargo`) to pick the crates.io index hash.\n",
         "# debian:13 CI has no host cargo; use the rules_rust toolchain binary.\n",
         'export CARGO="$cargo"\n',
-        'export PATH="$(dirname "$cargo"):${PATH:-}"\n',
+        'export PATH="$(dirname "$cargo")${_PATHSEP}${PATH:-}"\n',
         "export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse\n\n",
         'export CARGO_HOME="${TEST_TMPDIR:-${TMPDIR:-/tmp}}/cargo-audit-home"\n',
         'mkdir -p "$CARGO_HOME"\n',
@@ -44,19 +45,21 @@ def _impl(ctx):
         is_executable = True,
     )
 
+    run = launcher(ctx, script)
     runfiles = ctx.runfiles(files = [
         script,
+        run.executable,
         cargo_audit,
         cargo,
         ctx.file.workspace,
         ctx.file.lock,
         ctx.file.manifest,
-    ])
+    ] + run.files)
     runfiles = runfiles.merge(ctx.attr.cargo_audit[DefaultInfo].default_runfiles)
     runfiles = runfiles.merge(ctx.attr.cargo[DefaultInfo].default_runfiles)
     return [DefaultInfo(
-        executable = script,
-        files = depset([script]),
+        executable = run.executable,
+        files = depset([run.executable]),
         runfiles = runfiles,
     )]
 
@@ -94,7 +97,7 @@ _cargo_audit_test = rule(
             allow_single_file = True,
             doc = "Repo-root marker used when BUILD_WORKSPACE_DIRECTORY is unset.",
         ),
-    },
+    } | LAUNCHER_ATTRS,
     doc = "bazel test: cargo-audit against locked crates (no-sandbox, needs rustsec DB).",
 )
 
