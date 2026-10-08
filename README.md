@@ -227,17 +227,17 @@ buf_generate(
 
 GitHub-release binaries from [`bazel_utils_protoc`](#bazel_utils_protoc). Tag them with `protoc.plugin` in the root module; `buf_generate` puts those on PATH. Do not also list them in `plugins` unless you need an extra binary or an override. This module re-exports the same binaries at `@bazel_utils_buf//protoc/plugins/…`. The target **name** is the PATH name (`local:` in the template). Do not wrap them with `buf_plugin`.
 
-| Label                                                             | Upstream                                                                                                | Catalog versions | Platforms                                                        |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------- |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0   | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12         | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0          | linux/darwin/windows amd64+arm64                                 |
+| Label                                                             | Upstream                                                                                                | Catalog versions          | Platforms                                                        |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0                   | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0, v0.9.1            | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0            | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12                  | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0, v0.10.1, v0.10.2 | linux/darwin/windows amd64+arm64                                 |
 
 ```starlark
 load("@bazel_utils_buf//:buf.bzl", "buf_generate")
@@ -375,7 +375,7 @@ protoc.plugin(
 )
 protoc.plugin(
     name = "protoc-gen-protovalidate-buffa",
-    version = "v0.10.0",
+    version = "v0.10.2",
 )
 ```
 
@@ -390,17 +390,17 @@ Module-extension tag. One per plugin name per module; the root module's tag wins
 | `name`    | `string` | yes      | —       | PATH name (`protoc-gen-buffa`, `protoc-gen-buffa-packaging`, `protoc-gen-connect-go`, `protoc-gen-connect-rust`, `protoc-gen-contract-rust`, `protoc-gen-go`, `protoc-gen-grpc-gateway`, `protoc-gen-openapiv2`, `protoc-gen-protovalidate-buffa`). |
 | `version` | `string` | yes      | —       | GitHub release tag (must exist in this module's `plugins/<name>/registry.bzl`).                                                                                                                                                                     |
 
-| Label                                                         | Upstream                                                                                                | Catalog versions | Platforms                                                        |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------- |
-| `@bazel_utils_protoc//plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0           | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
-| `@bazel_utils_protoc//plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0   | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12         | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0          | linux/darwin/windows amd64+arm64                                 |
-| `@bazel_utils_protoc//plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0          | linux/darwin/windows amd64+arm64                                 |
+| Label                                                         | Upstream                                                                                                | Catalog versions          | Platforms                                                        |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
+| `@bazel_utils_protoc//plugins/protoc-gen-buffa`               | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa`                              | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
+| `@bazel_utils_protoc//plugins/protoc-gen-buffa-packaging`     | [anthropics/buffa](https://github.com/anthropics/buffa) `protoc-gen-buffa-packaging`                    | v0.9.2                    | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
+| `@bazel_utils_protoc//plugins/protoc-gen-connect-go`          | [connectrpc/connect-go](https://github.com/connectrpc/connect-go) `protoc-gen-connect-go`               | v1.21.0                   | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_protoc//plugins/protoc-gen-connect-rust`        | [connectrpc/connect-rust](https://github.com/connectrpc/connect-rust) `protoc-gen-connect-rust`         | v0.9.0, v0.9.1            | linux/darwin amd64+arm64, windows amd64 (no windows-arm64 asset) |
+| `@bazel_utils_protoc//plugins/protoc-gen-contract-rust`       | [sonalect/proto-contract.rs](https://github.com/sonalect/proto-contract.rs)                             | v0.1.0, v0.2.0            | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_protoc//plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`           | v1.36.12                  | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_protoc//plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway` | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_protoc//plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`    | v2.30.0, v2.31.0          | linux/darwin/windows amd64+arm64                                 |
+| `@bazel_utils_protoc//plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)             | v0.10.0, v0.10.1, v0.10.2 | linux/darwin/windows amd64+arm64                                 |
 
 ---
 
