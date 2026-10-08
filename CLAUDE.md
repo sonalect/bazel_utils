@@ -46,15 +46,20 @@ Where pins live:
 | golangci-lint  | `go/golangci.MODULE.bazel`                                                     |
 | govulncheck    | `go/go.mod`                                                                    |
 | ruff           | `python/ruff.MODULE.bazel`                                                     |
-| uv             | `python/MODULE.bazel` (`uv_bin.toolchain`)                                     |
+| uv             | `python/uv.MODULE.bazel`                                                       |
 | cargo-audit    | `rust/cargo_audit.MODULE.bazel`                                                |
 | Node, pnpm     | `markdown/MODULE.bazel` + `markdown/package.json` `packageManager`             |
 | busybox-w32    | `core/MODULE.bazel`                                                            |
 | bazelisk (CI)  | `.github/workflows/ci.yml` matrix                                              |
 
 When a version is newer than a rule set's built-in catalog, pin it ourselves:
-Node uses `node_repositories` with the sha256s from `SHASUMS256.txt`, pnpm uses
-`pnpm_version_integrity` from npm, and uv uses `uv_bin.toolchain(sha256s=…)`.
+Node uses `node_repositories` with the sha256s from `SHASUMS256.txt`, and pnpm
+uses `pnpm_version_integrity` from npm.
+
+When only a binary is needed, fetch it with `http_archive`/`http_file` and a
+`native_binary` (like ruff and uv), not through another rule set's module
+extension. Extensions run repository rules on the host, and some fail on
+Windows hosts and break the whole build there (aspect_rules_py 1.12.1 did).
 
 ## Adding a protoc plugin
 

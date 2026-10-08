@@ -482,7 +482,7 @@ govulncheck_test(
 
 ## bazel_utils_python
 
-Prebuilt [ruff](https://github.com/astral-sh/ruff) and [uv](https://github.com/astral-sh/uv) (GitHub releases; uv is pinned in this module's `uv_bin.toolchain`). Ruff config is the consumer `pyproject.toml` (`[tool.ruff]`). No Python interpreter is downloaded or needed.
+Prebuilt [ruff](https://github.com/astral-sh/ruff) and [uv](https://github.com/astral-sh/uv) (GitHub releases, pinned in this module). Ruff config is the consumer `pyproject.toml` (`[tool.ruff]`). No Python interpreter is downloaded or needed.
 
 `dirs` are Bazel paths from the repo root (`"//python"` → `python`).
 

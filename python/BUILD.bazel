@@ -24,6 +24,27 @@ native_binary(
     }),
 )
 
+# Prebuilt GitHub release; select is the exec platform (host that runs the tool).
+native_binary(
+    name = "uv",
+    src = select(
+        {
+            "@bazel_utils_core//:linux_amd64": "@uv_linux_amd64//:uv",
+            "@bazel_utils_core//:linux_arm64": "@uv_linux_arm64//:uv",
+            "@bazel_utils_core//:darwin_amd64": "@uv_darwin_amd64//:uv",
+            "@bazel_utils_core//:darwin_arm64": "@uv_darwin_arm64//:uv",
+            "@bazel_utils_core//:windows_amd64": "@uv_windows_amd64//:uv.exe",
+            "@bazel_utils_core//:windows_arm64": "@uv_windows_arm64//:uv.exe",
+        },
+        no_match_error = "No prebuilt uv for this OS/CPU",
+    ),
+    # Windows only runs files with an executable extension.
+    out = select({
+        "@bazel_utils_core//:windows": "uv.exe",
+        "//conditions:default": "uv.bin",
+    }),
+)
+
 bzl_library(
     name = "ruff_bzl",
     srcs = ["ruff.bzl"],
