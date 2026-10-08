@@ -2,3 +2,7 @@
 build --symlink_prefix=.bazel/
 # Disable Aspect Telemetry tracking.
 common --repo_env=DO_NOT_TRACK=1
+# Windows: rules_js's js_binary (markdownlint) needs a runfiles tree, and
+# Windows builds only a runfiles manifest by default.
+common --enable_platform_specific_config
+build:windows --enable_runfiles
