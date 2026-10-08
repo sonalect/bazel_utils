@@ -17,6 +17,13 @@ _export_goroot() {
   export GOROOT="$(dirname "$(dirname "$go_bin")")"
   export PATH="$GOROOT/bin${_PATHSEP}${PATH:-}"
   export GOTOOLCHAIN=local
+  # Bazel's Windows test env has no %LocalAppData% or %USERPROFILE%, where Go
+  # and golangci-lint keep their build caches and GOPATH by default.
+  if [[ "$_PATHSEP" == ";" ]]; then
+    local tmp="${TEST_TMPDIR:-${TMPDIR:-${TEMP:-$PWD}}}"
+    export LOCALAPPDATA="${LOCALAPPDATA:-$tmp/LocalAppData}"
+    export USERPROFILE="${USERPROFILE:-$tmp/UserProfile}"
+  fi
   if [[ ! -x "$go_bin" ]]; then
     echo "hermetic go is not executable: $go_bin (from $1)" >&2
     exit 1

@@ -91,6 +91,11 @@ bash on Linux/macOS and with busybox-w32 `sh` (ash) on Windows:
   - a loop that walks up with `dirname` must stop when the parent equals the
     path (`C:/`), not only at `/`;
   - no `cygpath` or MSYS assumptions.
+- Bazel's Windows test env is minimal: no `%LocalAppData%` or `%USERPROFILE%`.
+  Point tool caches at `$TEST_TMPDIR` (see `go/go_sdk_env.bzl`, uv, cargo).
+- rules_js's `js_binary` needs a runfiles tree, so Windows needs
+  `build:windows --enable_runfiles` (set in `.bazelrc`); our own wrappers
+  also work with manifest-only runfiles.
 - Check ash compatibility locally with `busybox sh <script>` (busybox picks
   the applet from argv[0], so the binary must be named `busybox`).
 

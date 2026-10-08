@@ -67,7 +67,11 @@ patch; breaking Starlark API changes bump the minor.
   `buf_module` / `buf_generate` run their scripts with it instead of
   `run_shell`. Wrapper scripts are ash-compatible (`;` PATH on Windows,
   workspace search stops at `C:/`). `bazel_utils_core` now depends on
-  `bazel_lib` (batch runfiles lookup).
+  `bazel_lib` (batch runfiles lookup). Go wrappers point `%LocalAppData%` and
+  `%USERPROFILE%` at the test tmpdir when Bazel's Windows test env lacks them
+  (Go and golangci-lint keep their caches there). `markdownlint_test` needs
+  `build:windows --enable_runfiles`: rules_js's `js_binary` needs a runfiles
+  tree.
 - Windows: prebuilt binaries (buf, protoc plugins, ruff, golangci-lint,
   cargo-audit) have a `.exe` output instead of `.bin`, so `bazel run` works
   and `buf_generate` puts `.exe` plugins on PATH. `buf_plugin` keeps the
