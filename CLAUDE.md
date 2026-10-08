@@ -30,6 +30,10 @@ aggregator that pulls them in with `local_path_override`; consumers use
    and check it against that file.
 4. Update the pin, README (the plugin tables' "Catalog versions" column lists
    every catalog version, not only the pin), and CHANGELOG.
+   A wrong hash usually fails the download, but a hash copied from **another**
+   asset does not: Bazel's repository cache is keyed by sha256 and serves
+   that other file. `@bazel_utils_protoc//plugins:catalog_test` rejects a
+   sha256 pinned for two URLs; check other catalogs by hand.
 5. Rebuild the lockfile and run the checks under "Testing".
 
 Where pins live:

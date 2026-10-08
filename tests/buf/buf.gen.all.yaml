@@ -1,5 +1,5 @@
 # Every prebuilt protoc.plugin catalog entry, so each binary runs on each CI
-# platform.
+# platform. Rust plugins use `strategy: all`: one call writes one root mod.rs.
 version: v2
 plugins:
   - local: protoc-gen-go
@@ -18,14 +18,18 @@ plugins:
     opt: generate_unbound_methods=true
   - local: protoc-gen-buffa
     out: gen/rust/buffa
+    strategy: all
   - local: protoc-gen-buffa-packaging
-    out: gen/rust/buffa
+    out: gen/rust/packaging
     strategy: all
   - local: protoc-gen-connect-rust
     out: gen/rust/connect
+    strategy: all
     opt: extern_path=.=crate::proto
   - local: protoc-gen-contract-rust
     out: gen/rust/contract
+    strategy: all
     opt: buffa_module=crate::proto
   - local: protoc-gen-protovalidate-buffa
     out: gen/rust/validate
+    strategy: all

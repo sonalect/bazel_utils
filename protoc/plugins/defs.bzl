@@ -61,3 +61,22 @@ def plugin_repo_name(name):
       Repository name used by the module extension.
     """
     return name.replace("-", "_")
+
+def plugin_url(plugin, version, spec):
+    """Download URL of one catalog entry.
+
+    Args:
+      plugin: A `PLUGIN` dict from `plugins/<name>/registry.bzl`.
+      version: Release tag in that catalog (e.g. `v0.9.2`).
+      spec: The platform entry (`{bin, file, sha256}`).
+
+    Returns:
+      The release asset URL.
+    """
+    kwargs = {
+        "file": spec["file"],
+        "version": version,
+    }
+    if "{version_bare}" in plugin["url"]:
+        kwargs["version_bare"] = version[1:] if version.startswith("v") else version
+    return plugin["url"].format(**kwargs)

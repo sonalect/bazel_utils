@@ -95,11 +95,12 @@ jobs:
           curl -fsSL -o "${dir}/${BAZEL_EXE}" \
             "https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/${BAZELISK}"
           # macOS's BSD sha256sum cannot read a checklist from stdin, so
-          # compute the hash and compare it here.
+          # compute the hash and compare it here. Hash stdin: with a Windows
+          # path argument, Git Bash's shasum prefixes the hash with `\`.
           if command -v shasum >/dev/null; then
-            actual="$(shasum -a 256 "${dir}/${BAZEL_EXE}" | awk '{print $1}')"
+            actual="$(shasum -a 256 < "${dir}/${BAZEL_EXE}" | awk '{print $1}')"
           else
-            actual="$(sha256sum "${dir}/${BAZEL_EXE}" | awk '{print $1}')"
+            actual="$(sha256sum < "${dir}/${BAZEL_EXE}" | awk '{print $1}')"
           fi
           if [[ "${actual}" != "${BAZELISK_SHA256}" ]]; then
             echo "bazelisk sha256 mismatch: got ${actual}, want ${BAZELISK_SHA256}" >&2

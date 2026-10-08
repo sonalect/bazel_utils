@@ -44,11 +44,17 @@ patch; breaking Starlark API changes bump the minor.
   `buf_generate` with all nine prebuilt plugins, `buf_plugin`,
   `buf_lint_test`, `buf_format`, `golangci_test`, `govulncheck_test`,
   `ruff_test`, `ruff_format`, `uv_audit_test`, `cargo_audit_test`
-  (buildifier and markdownlint run on the repo itself). Unit test for
-  `go_list_patterns`.
+  (buildifier and markdownlint run on the repo itself). Unit tests for
+  `go_list_patterns` and for the plugin catalogs (`catalog_test`: every
+  version lists all six platforms, and one sha256 names exactly one URL).
 
 ### Fixed
 
+- `protoc-gen-grpc-gateway` v2.31.0 windows-arm64 pinned protoc-gen-openapiv2's
+  sha256. Bazel's repository cache is keyed by sha256, so when openapiv2 was
+  fetched first, Windows arm64 builds silently got the openapiv2 binary under
+  the grpc-gateway name. It now pins its own hash from the release's
+  `checksums.txt`.
 - `golangci_test`, `govulncheck_test`: run in the `go.mod` directory, with
   `dirs` relative to it. A `go.mod` below the repo root (`//go:go.mod`) failed
   with "directory prefix … does not contain main module" unless a root
