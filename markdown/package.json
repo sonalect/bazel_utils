@@ -1,7 +1,7 @@
 {
   "name": "bazel_utils",
   "private": true,
-  "packageManager": "pnpm@12.6.0",
+  "packageManager": "pnpm@12.10.1",
   "devDependencies": {
     "markdownlint-cli2": "catalog:"
   }

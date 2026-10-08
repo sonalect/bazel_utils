@@ -8,6 +8,29 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+### Added
+
+- `bazel_utils_protoc`: `protoc-gen-protovalidate-buffa` catalog version
+  v0.10.2 (optional and oneof strings get the plain-string format and length
+  rules, `IGNORE_IF_ZERO_VALUE` covers field CEL and predefined rules, custom
+  rule paths keep the extension's package and messages) for linux, darwin,
+  and windows on amd64 and arm64.
+
+### Changed
+
+- `protoc-gen-protovalidate-buffa` pin from v0.10.1 to v0.10.2.
+- `bazel_utils_go`: rules_go from 0.63.0 to 0.64.1.
+- `bazel_utils_python`: ruff from 0.16.9 to 0.16.10.
+- `bazel_utils_python`: uv pinned to 0.12.23 in `uv_bin.toolchain` (version
+  and sha256s from the release's `sha256.sum`) instead of aspect_rules_py's
+  default 0.11.6.
+- `bazel_utils_markdown`: aspect_rules_js from 3.4.1 to 3.5.1, rules_nodejs
+  from 6.7.5 to 6.7.6, Node from 24.18.0 to 24.21.0, and pnpm from 11.20.0
+  to 12.10.1. Both are newer than the rules' catalogs, so Node's sha256s
+  (`node_repositories`) come from nodejs.org `SHASUMS256.txt` and pnpm's
+  `pnpm_version_integrity` from npm. `package.json` `packageManager` from
+  pnpm 12.6.0 to 12.10.1.
+
 ## [0.2.14] - 2026-10-07
 
 ### Added
