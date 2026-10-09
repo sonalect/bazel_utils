@@ -95,7 +95,9 @@ bash on Linux/macOS and with busybox-w32 `sh` (ash) on Windows:
   Point tool caches at `$TEST_TMPDIR` (see `go/go_sdk_env.bzl`, uv, cargo).
 - rules_js's `js_binary` needs a runfiles tree, so Windows needs
   `build:windows --enable_runfiles` (set in `.bazelrc`); our own wrappers
-  also work with manifest-only runfiles.
+  also work with manifest-only runfiles. On Windows the runfiles tree holds copies, not
+  symlinks, so resolve source files (the workspace marker) through the
+  manifest (`_rf_source`), not through the tree.
 - Check ash compatibility locally with `busybox sh <script>` (busybox picks
   the applet from argv[0], so the binary must be named `busybox`).
 

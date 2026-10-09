@@ -44,6 +44,32 @@ _rf() {
 """
 
 WORKSPACE_BASH = RUNFILES_BASH + """
+# Real path of a source file such as the workspace marker. The runfiles
+# manifest maps it to the checkout; a runfiles tree may hold a copy instead
+# (Windows with --enable_runfiles), whose dirname is not the checkout.
+_rf_source() {
+  local path=$1
+  local manifest="${RUNFILES_MANIFEST_FILE:-}"
+  if [[ -z "$manifest" ]]; then
+    if [[ -f "${RUNFILES_DIR:-}/MANIFEST" ]]; then
+      manifest="${RUNFILES_DIR:-}/MANIFEST"
+    elif [[ -f "$0.runfiles/MANIFEST" ]]; then
+      manifest="$0.runfiles/MANIFEST"
+    elif [[ -f "$0.runfiles_manifest" ]]; then
+      manifest="$0.runfiles_manifest"
+    fi
+  fi
+  if [[ -n "$manifest" && -f "$manifest" ]]; then
+    local candidate
+    candidate=$(awk -v p="$path" '$1 == p { print substr($0, length($1) + 2); exit }' "$manifest")
+    if [[ -n "$candidate" && -e "$candidate" ]]; then
+      realpath "$candidate"
+      return
+    fi
+  fi
+  _rf "$path"
+}
+
 _workspace_dir() {
   local marker=$1
   if [[ -n "${BUILD_WORKSPACE_DIRECTORY:-}" ]]; then

@@ -71,7 +71,9 @@ patch; breaking Starlark API changes bump the minor.
   `%USERPROFILE%` at the test tmpdir when Bazel's Windows test env lacks them
   (Go and golangci-lint keep their caches there). `markdownlint_test` needs
   `build:windows --enable_runfiles`: rules_js's `js_binary` needs a runfiles
-  tree.
+  tree. Wrappers find the workspace from the runfiles manifest entry for
+  `MODULE.bazel`, which points into the checkout: a runfiles tree on Windows
+  holds a copy, and its directory is not the checkout.
 - Windows: prebuilt binaries (buf, protoc plugins, ruff, golangci-lint,
   cargo-audit) have a `.exe` output instead of `.bin`, so `bazel run` works
   and `buf_generate` puts `.exe` plugins on PATH. `buf_plugin` keeps the
