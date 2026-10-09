@@ -51,7 +51,7 @@ def wrapper_script_header(ctx, *, binaries, workspace):
     ]
     for item in binaries:
         chunks.append("{}=$(_rf {})\n".format(item[0], shell.quote(rlocation(item[1], ws))))
-    chunks.append('cd "$(_workspace_dir "$(_rf {})")"\n'.format(
+    chunks.append('cd "$(_workspace_dir "$(_rf_source {})")"\n'.format(
         shell.quote(rlocation(workspace, ws)),
     ))
     return chunks
