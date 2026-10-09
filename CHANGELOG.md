@@ -8,7 +8,7 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
-## [0.3.0] - 2026-10-08
+## [0.3.0] - 2026-10-09
 
 ### Removed
 
