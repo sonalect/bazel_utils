@@ -8,6 +8,23 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-10-12
+
+### Fixed
+
+- `buf_generate` on Windows kept only the first directory of the generated
+  files. Under busybox ash `[[ ... == "$dir"/* ]]` is a command, so the `*`
+  was a glob over the files of `$dir`: with two or more it failed with
+  `unknown operand`, the walk to the common parent stopped early, and the
+  output lost every sibling directory (`buffa/` kept, `connect/` and
+  `contract/` gone). The loop now uses `case`, which does not glob.
+  `//tests/buf:plugins_layout` checks that files from several sibling
+  directories are in the output.
+
+### Changed
+
+- Raised every language module and the aggregator to `0.3.2` (lockstep).
+
 ## [0.3.1] - 2026-10-12
 
 ### Added
@@ -347,7 +364,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.1...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/sonalect/bazel_utils/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/sonalect/bazel_utils/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/sonalect/bazel_utils/compare/v0.2.14...v0.3.0
 [0.2.14]: https://github.com/sonalect/bazel_utils/compare/v0.2.13...v0.2.14

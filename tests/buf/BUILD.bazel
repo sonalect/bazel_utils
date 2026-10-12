@@ -1,4 +1,5 @@
 load("@bazel_utils_buf//:buf.bzl", "buf_format", "buf_generate", "buf_lint_test", "buf_module", "buf_plugin")
+load(":layout.bzl", "generate_layout_check")
 
 # Smoke tests for the buf rules and every prebuilt plugin on each CI platform.
 
@@ -24,6 +25,20 @@ buf_generate(
         "@bazel_utils_buf//protoc/plugins/protoc-gen-protovalidate-buffa",
     ],
     template = "buf.gen.all.yaml",
+)
+
+# The plugins write into sibling directories (gen/go, gen/openapi, gen/rust/*),
+# and the first one holds several files. buf_generate must keep all of them: on
+# Windows it once found the common directory wrongly and kept only `go/`.
+generate_layout_check(
+    name = "plugins_layout",
+    files = [
+        "go/smoke/v1/smoke.pb.go",
+        "openapi/smoke/v1/smoke.swagger.json",
+        "rust/buffa/smoke.v1.smoke.rs",
+        "rust/packaging/mod.rs",
+    ],
+    generated = ":plugins",
 )
 
 buf_plugin(

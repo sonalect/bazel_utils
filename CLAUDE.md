@@ -87,6 +87,9 @@ bash on Linux/macOS and with busybox-w32 `sh` (ash) on Windows:
 - Keep scripts ash-compatible:
   - ash expands **both** sides of `[[ A && B ]]` before testing, so guard
     every variable with `${VAR:-}` under `set -u`;
+  - `[[ ]]` is a command in ash, so an unquoted `*` on the right of `==` or
+    `!=` is a glob over the files of the current directory (several matches
+    fail with `unknown operand`); test a pattern with `case`;
   - the PATH separator is `$_PATHSEP` (`;` when `uname -s` is `Windows_NT`);
   - a loop that walks up with `dirname` must stop when the parent equals the
     path (`C:/`), not only at `/`;

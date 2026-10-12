@@ -238,7 +238,11 @@ def _copy_generated_lines():
         '  if [[ -z "$COMMON" ]]; then',
         '    COMMON="$d"',
         "  else",
-        '    while [[ "$d" != "$COMMON" && "$d" != "$COMMON"/* ]]; do',
+        # `case`, not `[[ "$d" == "$COMMON"/* ]]`: ash runs `[[` as a command,
+        # so the unquoted `*` is a glob over the files of $COMMON, which fails
+        # with "unknown operand" as soon as $COMMON holds two or more.
+        "    while :; do",
+        '      case "$d" in "$COMMON" | "$COMMON"/*) break ;; esac',
         '      if [[ "$COMMON" == "." ]]; then',
         '        echo "buf_generate: generated files do not share a directory" >&2',
         "        exit 1",
