@@ -4,7 +4,7 @@ Starlark helpers for Bazel workspaces. Each language is a **separate Bazel modul
 
 `bazel_utils_core` is pulled in transitively. The root module `bazel_utils` in this repository is an aggregator for development, not a consumer dependency.
 
-Current module version: **0.3.3**. See [CHANGELOG.md](CHANGELOG.md) for release notes.
+Current module version: **0.3.4**. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 | Module                                      | Load                                   | Public API                                                                            |
 | ------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -22,16 +22,16 @@ Pass `buildifier` / `golangci` / `govulncheck` / `buf` / `ruff` / `uv` / `cargo_
 
 Windows needs no host bash (Git Bash, MSYS2) or Python. `bazel_utils_core` downloads [busybox-w32](https://frippery.org/busybox/) (amd64, arm64): the `*_test` and `*_format` wrappers run through a `.bat` launcher with `busybox sh`, and `buf_module` / `buf_generate` actions run with it too. Linux and macOS use the system bash. Prebuilt binaries have a `.exe` output on Windows. `markdownlint_test` on Windows needs `build:windows --enable_runfiles` (with `common --enable_platform_specific_config`): rules_js's `js_binary` needs a runfiles tree. `protoc.plugin` zip releases are extracted at build time with the hermetic bsdtar from [tar.bzl](https://registry.bazel.build/modules/tar.bzl); no host Python or unzip is used.
 
-Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.3.3` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
+Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.3.4` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
 
 ```starlark
-bazel_dep(name = "bazel_utils_core", version = "0.3.3")
+bazel_dep(name = "bazel_utils_core", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_core",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "core",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 ```
 
@@ -45,13 +45,13 @@ Prebuilt [buildifier](https://github.com/bazelbuild/buildtools) (GitHub release,
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_bazel", version = "0.3.3")
+bazel_dep(name = "bazel_utils_bazel", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_bazel",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "bazel",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 ```
 
@@ -128,13 +128,13 @@ The action sandbox does not inherit the user shell. Without this, buf runs anony
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_buf", version = "0.3.3")
+bazel_dep(name = "bazel_utils_buf", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_buf",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "buf",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 
 buf = use_extension("@bazel_utils_buf//:extensions.bzl", "buf")
@@ -281,6 +281,29 @@ plugins:
     out: rust/api/gen/my_thing
 ```
 
+### `protoc_prefix`
+
+Stages the **prebuilt** `protoc` of the resolved proto toolchain (`@protobuf//bazel/private:proto_toolchain_type`) with the well-known-type `.proto` files as a Unix-layout directory: `bin/protoc` and `include/google/protobuf/…`. Use it where a tool needs a `protoc` path, such as a Cargo `build.rs` (`PROTOC=$(execpath :protoc_prefix)/bin/protoc`). Never depend on `@protobuf//:protoc`: that target compiles protoc from source, and the rule fails if the toolchain resolves to such a build.
+
+protobuf publishes no Windows ARM64 `protoc`. `bazel_utils_buf` registers a toolchain for that exec platform that uses the x64 `protoc-<version>-win64.zip` of the same release as the `protobuf` module (Windows 11 on ARM emulates it), so Windows ARM64 never compiles protoc.
+
+| Name   | Type         | Required | Default | Description                                                     |
+| ------ | ------------ | -------- | ------- | --------------------------------------------------------------- |
+| `name` | `string`     | yes      | —       | Target name; the output directory has the same name.            |
+| `wkts` | `label_list` | yes      | —       | `.proto` filegroups, e.g. `@protobuf//:well_known_type_protos`. |
+
+```starlark
+load("@bazel_utils_buf//:protoc_prefix.bzl", "protoc_prefix")
+
+protoc_prefix(
+    name = "protoc_prefix",
+    wkts = [
+        "@protobuf//:descriptor_proto_srcs",
+        "@protobuf//:well_known_type_protos",
+    ],
+)
+```
+
 ### `buf_lint_test`
 
 `bazel test`: `buf lint` on a staged `buf_module`. Fetches `buf.yaml` `deps` from the BSR.
@@ -333,13 +356,13 @@ Canonical labels: `@bazel_utils_protoc//plugins/…`. [`bazel_utils_buf`](#bazel
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_protoc", version = "0.3.3")
+bazel_dep(name = "bazel_utils_protoc", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_protoc",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "protoc",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 
 protoc = use_extension("@bazel_utils_protoc//:extensions.bzl", "protoc")
@@ -416,13 +439,13 @@ Both tools run in the `manifest` (`go.mod`) directory, so `go.mod` may be below 
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_go", version = "0.3.3")
+bazel_dep(name = "bazel_utils_go", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_go",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "go",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 ```
 
@@ -490,13 +513,13 @@ Prebuilt [ruff](https://github.com/astral-sh/ruff) and [uv](https://github.com/a
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_python", version = "0.3.3")
+bazel_dep(name = "bazel_utils_python", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_python",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "python",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 ```
 
@@ -580,13 +603,13 @@ Prebuilt [cargo-audit](https://github.com/rustsec/rustsec/tree/main/cargo-audit)
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_rust", version = "0.3.3")
+bazel_dep(name = "bazel_utils_rust", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_rust",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "rust",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 ```
 
@@ -627,13 +650,13 @@ cargo_audit_test(
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_md", version = "0.3.3")
+bazel_dep(name = "bazel_utils_md", version = "0.3.4")
 
 git_override(
     module_name = "bazel_utils_md",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "markdown",
-    tag = "v0.3.3",
+    tag = "v0.3.4",
 )
 ```
 

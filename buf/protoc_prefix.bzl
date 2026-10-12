@@ -3,7 +3,9 @@
 Never depend on @protobuf//:protoc — that cc_binary compiles protoc from source.
 Protobuf 33.4+ registers a GitHub prebuilt on
 @protobuf//bazel/private:proto_toolchain_type when prefer_prebuilt_protoc is
-true (the default).
+true (the default). protobuf publishes no Windows ARM64 protoc; for that exec
+platform this module registers the x64 build (`MODULE.bazel`), which Windows 11
+on ARM emulates.
 """
 
 _PROTO_TOOLCHAIN_TYPE = "@protobuf//bazel/private:proto_toolchain_type"
@@ -16,6 +18,9 @@ def _protoc_prefix_impl(ctx):
     protoc = compiler.executable
     if not protoc:
         fail("{}: proto toolchain has no proto_compiler".format(ctx.label))
+    if not protoc.is_source:
+        fail(("{}: the proto toolchain resolved to a protoc compiled from source ({}). " +
+              "No prebuilt protoc matches this exec platform.").format(ctx.label, protoc.path))
 
     out = ctx.actions.declare_directory(ctx.label.name)
     copies = [

@@ -3,6 +3,17 @@ load(":generate_path_test.bzl", "dep_import_path_test", "repo_rel_from_short_pat
 
 package(default_visibility = ["//visibility:public"])
 
+# The x64 protoc for a Windows ARM64 exec platform (see MODULE.bazel).
+toolchain(
+    name = "protoc_windows_arm64_toolchain",
+    exec_compatible_with = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:windows",
+    ],
+    toolchain = "@protoc_windows_arm64//:toolchain",
+    toolchain_type = "@protobuf//bazel/private:proto_toolchain_type",
+)
+
 bzl_library(
     name = "plugin_bzl",
     srcs = ["plugin.bzl"],
