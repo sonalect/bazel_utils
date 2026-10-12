@@ -1,0 +1,8 @@
+load("@protobuf//bazel/toolchains:proto_toolchain.bzl", "proto_toolchain")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_toolchain(
+    name = "toolchain",
+    proto_compiler = "bin/protoc.exe",
+)

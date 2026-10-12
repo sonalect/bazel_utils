@@ -2,12 +2,12 @@
 
 module(
     name = "bazel_utils_buf",
-    version = "0.3.3",
+    version = "0.3.4",
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.3.3")
-bazel_dep(name = "bazel_utils_protoc", version = "0.3.3")
+bazel_dep(name = "bazel_utils_core", version = "0.3.4")
+bazel_dep(name = "bazel_utils_protoc", version = "0.3.4")
 bazel_dep(name = "platforms", version = "1.1.0")
 bazel_dep(name = "protobuf", version = "36.2")
 
@@ -20,3 +20,20 @@ use_repo(buf, "buf")
 # Root-module `protoc.plugin` labels for buf_generate PATH (`ROOT_PLUGIN_LABELS`).
 protoc = use_extension("@bazel_utils_protoc//:extensions.bzl", "protoc")
 use_repo(protoc, "protoc_root_plugins")
+
+# protobuf publishes no Windows ARM64 protoc, so its prebuilt toolchains match
+# no Windows ARM64 exec platform and Bazel falls back to compiling protoc from
+# source (a large C++ build). Windows 11 on ARM runs the x64 build, so register
+# that one for this exec platform. Same release and sha256 as the protobuf
+# module's own win64 pin (`bazel/private/oss/toolchains/prebuilt/
+# tool_integrity.bzl`); move it with the `protobuf` bazel_dep.
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "protoc_windows_arm64",
+    build_file = "//:protoc_windows_arm64.BUILD.bazel",
+    sha256 = "f0c128dc0d8492eceece83bb459a4c0e316764b929ffbf1aa416357fd644edd3",
+    url = "https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protoc-36.2-win64.zip",
+)
+
+register_toolchains("//:protoc_windows_arm64_toolchain")

@@ -40,19 +40,20 @@ aggregator that pulls them in with `local_path_override`; consumers use
 
 Where pins live:
 
-| Tool           | File                                                                           |
-| -------------- | ------------------------------------------------------------------------------ |
-| Buf CLI        | `buf/registry.bzl` (+ fallback in `buf/MODULE.bazel`)                          |
-| protoc plugins | `protoc/plugins/<name>/registry.bzl` (+ fallback pin in `protoc/MODULE.bazel`) |
-| buildifier     | `bazel/buildifier.MODULE.bazel`                                                |
-| golangci-lint  | `go/golangci.MODULE.bazel`                                                     |
-| govulncheck    | `go/go.mod`                                                                    |
-| ruff           | `python/ruff.MODULE.bazel`                                                     |
-| uv             | `python/uv.MODULE.bazel`                                                       |
-| cargo-audit    | `rust/cargo_audit.MODULE.bazel`                                                |
-| Node, pnpm     | `markdown/MODULE.bazel` + `markdown/package.json` `packageManager`             |
-| busybox-w32    | `core/MODULE.bazel`                                                            |
-| bazelisk (CI)  | `.github/workflows/ci.yml` matrix                                              |
+| Tool                        | File                                                                                                                                                      |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Buf CLI                     | `buf/registry.bzl` (+ fallback in `buf/MODULE.bazel`)                                                                                                     |
+| protoc plugins              | `protoc/plugins/<name>/registry.bzl` (+ fallback pin in `protoc/MODULE.bazel`)                                                                            |
+| protoc (Windows ARM64 only) | `buf/MODULE.bazel` `protoc_windows_arm64`: the `win64` zip of the same release as the `protobuf` `bazel_dep`; sha256 from protobuf's `tool_integrity.bzl` |
+| buildifier                  | `bazel/buildifier.MODULE.bazel`                                                                                                                           |
+| golangci-lint               | `go/golangci.MODULE.bazel`                                                                                                                                |
+| govulncheck                 | `go/go.mod`                                                                                                                                               |
+| ruff                        | `python/ruff.MODULE.bazel`                                                                                                                                |
+| uv                          | `python/uv.MODULE.bazel`                                                                                                                                  |
+| cargo-audit                 | `rust/cargo_audit.MODULE.bazel`                                                                                                                           |
+| Node, pnpm                  | `markdown/MODULE.bazel` + `markdown/package.json` `packageManager`                                                                                        |
+| busybox-w32                 | `core/MODULE.bazel`                                                                                                                                       |
+| bazelisk (CI)               | `.github/workflows/ci.yml` matrix                                                                                                                         |
 
 When a version is newer than a rule set's built-in catalog, pin it ourselves:
 Node uses `node_repositories` with the sha256s from `SHASUMS256.txt`, and pnpm

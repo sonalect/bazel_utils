@@ -8,6 +8,27 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-10-12
+
+### Fixed
+
+- `bazel_utils_buf`: on a Windows ARM64 exec platform the proto toolchain
+  matched no prebuilt `protoc` (protobuf publishes `win32` and `win64` only),
+  so Bazel fell back to `@protobuf//:protoc` and compiled protoc, abseil, and
+  upb from source. The module now registers a toolchain for Windows ARM64
+  that uses the x64 `protoc-36.2-win64.zip` (the same release and sha256 as
+  the `protobuf` module's win64 pin; Windows 11 on ARM emulates it).
+- `protoc_prefix` fails with a clear message when the resolved `protoc` is
+  compiled from source instead of staging it silently.
+
+### Added
+
+- `//tests/buf:protoc_prefix` builds `protoc_prefix` on every CI platform.
+
+### Changed
+
+- Raised every language module and the aggregator to `0.3.4` (lockstep).
+
 ## [0.3.3] - 2026-10-12
 
 ### Added
@@ -377,7 +398,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.3...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/sonalect/bazel_utils/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/sonalect/bazel_utils/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/sonalect/bazel_utils/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/sonalect/bazel_utils/compare/v0.3.0...v0.3.1

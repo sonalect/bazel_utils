@@ -2,11 +2,11 @@
 
 module(
     name = "bazel_utils_python",
-    version = "0.3.3",
+    version = "0.3.4",
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.3.3")
+bazel_dep(name = "bazel_utils_core", version = "0.3.4")
 
 include("//:ruff.MODULE.bazel")
 include("//:uv.MODULE.bazel")
