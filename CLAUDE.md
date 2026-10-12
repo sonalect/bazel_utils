@@ -23,6 +23,8 @@ aggregator that pulls them in with `local_path_override`; consumers use
    publish time in UTC (`gh release view <tag> -R <repo> --json publishedAt`,
    npm `time`, or the BCR commit date) against `date -u`. If it is younger,
    pin the newest release that is older and say when the newer one clears.
+   **Exception:** releases from our own `sonalect/*` repositories skip the
+   quarantine. Steps 2 to 4 still apply.
 2. Check the publisher (`--json author`) against earlier releases. A change
    needs an explanation before the pin is used.
 3. Take the sha256 from the upstream checksum file (`sha256.sum`,

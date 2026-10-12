@@ -78,5 +78,37 @@ PLUGIN = {
                 "sha256": "0a42cf06bdaf82b0edff7d178f9e53e9bb032810b68db2d9a51efd4e712d2ad8",
             },
         },
+        "v0.2.1": {
+            "linux_amd64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "linux-x86_64",
+                "sha256": "30dfe2a1c90c1a4b3ccdc3f4b86d73de2d2c5d525588a5dcb29d42e4c758b5c9",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "linux-aarch64",
+                "sha256": "b20416183316051924255a8a4e0cf8b85c15a360bffef8e1eca9bb954700666c",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "darwin-x86_64",
+                "sha256": "e8f6943cb931a99088dc5e20d3eff24ac8133df18449bb9aee1ecd9c8b9d695a",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-contract-rust",
+                "file": "darwin-aarch64",
+                "sha256": "49dbba4fdf9377e2480c92a8d137f8f9dd9695597760206684c8d89e1424a510",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-contract-rust.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "af7a06b98281a5a16b3e137031523c9dcab04bcc6e717214431c117b8c8f05e5",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-contract-rust.exe",
+                "file": "windows-aarch64.exe",
+                "sha256": "3ba58ea3fcb302d481e5512bbc626915b9371f7548d78fb0ce10ecae141d70ed",
+            },
+        },
     },
 }
