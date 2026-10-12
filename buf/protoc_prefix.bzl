@@ -8,6 +8,8 @@ platform this module registers the x64 build (`MODULE.bazel`), which Windows 11
 on ARM emulates.
 """
 
+load("@bazel_utils_core//internal:launcher.bzl", "SHELL_ACTION_ATTRS", "run_shell_action")
+
 _PROTO_TOOLCHAIN_TYPE = "@protobuf//bazel/private:proto_toolchain_type"
 
 def _protoc_prefix_impl(ctx):
@@ -27,17 +29,18 @@ def _protoc_prefix_impl(ctx):
         'cp "{}" "$OUT/include/google/protobuf/{}"'.format(src.path, src.basename)
         for src in ctx.files.wkts
     ]
-    ctx.actions.run_shell(
+    run_shell_action(
+        ctx,
         outputs = [out],
         inputs = depset(direct = [protoc] + ctx.files.wkts),
         tools = [compiler],
         command = "\n".join([
-            "set -euo pipefail",
+            "set -eu",
             'OUT="{}"'.format(out.path),
             'mkdir -p "$OUT/bin" "$OUT/include/google/protobuf"',
             'cp "{}" "$OUT/bin/protoc"'.format(protoc.path),
             "chmod +x \"$OUT/bin/protoc\"",
-        ] + copies),
+        ] + (['cp "{}" "$OUT/bin/protoc.exe"'.format(protoc.path)] if protoc.extension == "exe" else []) + copies),
         mnemonic = "ProtocPrefix",
         progress_message = "Staging prebuilt protoc prefix %{label}",
     )
@@ -51,6 +54,6 @@ protoc_prefix = rule(
             mandatory = True,
             doc = "google.protobuf WKT .proto files (filegroups, not compiled C++).",
         ),
-    },
+    } | SHELL_ACTION_ATTRS,
     toolchains = [_PROTO_TOOLCHAIN_TYPE],
 )
