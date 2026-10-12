@@ -8,6 +8,35 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-12
+
+### Added
+
+- `bazel_utils_protoc`: `protoc-gen-connect-go` catalog version v2.0.0
+  (connect-go v2: generated code takes and returns plain messages and talks
+  to a `Transport`, so it is not compatible with v1) for linux, darwin, and
+  windows on amd64 and arm64. The fallback pin stays v1.21.0.
+- `bazel_utils_protoc`: `protoc-gen-protovalidate-buffa` catalog version
+  v0.10.3 (CEL rules that read `FieldMask.paths` compile correctly).
+
+### Changed
+
+- Raised every language module and the aggregator to `0.3.1` (lockstep).
+- `protoc-gen-protovalidate-buffa` fallback pin from v0.10.2 to v0.10.3.
+- `bazel_utils_python`: ruff from 0.16.10 to 0.17.0 and uv from 0.12.23 to
+  0.13.0.
+- `bazel_utils_markdown`: pnpm from 12.10.1 to 12.11.2 (`pnpm_version_integrity`
+  from npm, `package.json` `packageManager`).
+- `bazel_utils_go`: rules_go from 0.64.1 to 0.64.2, Go from 1.27.1 to 1.27.2,
+  and the indirect `golang.org/x/{mod,sync,sys,telemetry,tools}` modules
+  (govulncheck stays at x/vuln v1.8.0).
+- `bazel_utils_core`: bazel_lib from 3.7.0 to 3.7.2.
+- Bazel from 9.2.0 to 9.3.0 (`.bazelversion`).
+- CI runs the Linux jobs on `ubuntu-26.04` and `ubuntu-26.04-arm` instead of
+  Ubuntu 24.04, and the macOS jobs on `macos-26` and `macos-26-intel` instead
+  of macOS 15 (both generally available). Windows runners, `actions/checkout`,
+  `actions/cache`, and Bazelisk were already the newest releases.
+
 ## [0.3.0] - 2026-10-09
 
 ### Removed
