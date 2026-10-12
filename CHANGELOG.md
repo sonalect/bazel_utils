@@ -20,6 +20,10 @@ patch; breaking Starlark API changes bump the minor.
   the `protobuf` module's win64 pin; Windows 11 on ARM emulates it).
 - `protoc_prefix` fails with a clear message when the resolved `protoc` is
   compiled from source instead of staging it silently.
+- `protoc_prefix` staged the prefix with the host bash (`run_shell`), which
+  does not exist on a Windows runner without Git Bash. It now runs through
+  `run_shell_action`, like the other rules (busybox on Windows), and also
+  stages `bin/protoc.exe` next to `bin/protoc` when the compiler is an `.exe`.
 
 ### Added
 
