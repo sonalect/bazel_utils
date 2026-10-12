@@ -347,7 +347,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/sonalect/bazel_utils/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/sonalect/bazel_utils/compare/v0.2.14...v0.3.0
 [0.2.14]: https://github.com/sonalect/bazel_utils/compare/v0.2.13...v0.2.14
 [0.2.13]: https://github.com/sonalect/bazel_utils/compare/v0.2.12...v0.2.13
