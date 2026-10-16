@@ -2,11 +2,11 @@
 
 module(
     name = "bazel_utils_protoc",
-    version = "0.3.4",
+    version = "0.4.0",
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.3.4")
+bazel_dep(name = "bazel_utils_core", version = "0.4.0")
 
 # Hermetic bsdtar extracts zip releases (//plugins:unzip.bzl).
 bazel_dep(name = "tar.bzl", version = "0.10.9")
@@ -24,15 +24,11 @@ protoc.plugin(
 )
 protoc.plugin(
     name = "protoc-gen-connect-go",
-    version = "v1.21.0",
+    version = "v1.21.1",
 )
 protoc.plugin(
     name = "protoc-gen-connect-rust",
     version = "v0.9.1",
-)
-protoc.plugin(
-    name = "protoc-gen-contract-rust",
-    version = "v0.2.1",
 )
 protoc.plugin(
     name = "protoc-gen-go",
@@ -47,8 +43,12 @@ protoc.plugin(
     version = "v2.31.0",
 )
 protoc.plugin(
+    name = "protoc-gen-protocontract-buffa",
+    version = "v0.3.1",
+)
+protoc.plugin(
     name = "protoc-gen-protovalidate-buffa",
-    version = "v0.10.3",
+    version = "v0.10.4",
 )
 use_repo(
     protoc,
@@ -56,10 +56,10 @@ use_repo(
     "protoc_gen_buffa_packaging",
     "protoc_gen_connect_go",
     "protoc_gen_connect_rust",
-    "protoc_gen_contract_rust",
     "protoc_gen_go",
     "protoc_gen_grpc_gateway",
     "protoc_gen_openapiv2",
+    "protoc_gen_protocontract_buffa",
     "protoc_gen_protovalidate_buffa",
     "protoc_root_plugins",
 )

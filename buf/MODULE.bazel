@@ -2,19 +2,19 @@
 
 module(
     name = "bazel_utils_buf",
-    version = "0.3.4",
+    version = "0.4.0",
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.3.4")
-bazel_dep(name = "bazel_utils_protoc", version = "0.3.4")
+bazel_dep(name = "bazel_utils_core", version = "0.4.0")
+bazel_dep(name = "bazel_utils_protoc", version = "0.4.0")
 bazel_dep(name = "platforms", version = "1.1.0")
 bazel_dep(name = "protobuf", version = "36.2")
 
 # Fallback when this module is root. The consumer's buf.toolchains tag wins
 # and is what gets downloaded.
 buf = use_extension("//:extensions.bzl", "buf")
-buf.toolchains(version = "v1.73.0")
+buf.toolchains(version = "v1.74.0")
 use_repo(buf, "buf")
 
 # Root-module `protoc.plugin` labels for buf_generate PATH (`ROOT_PLUGIN_LABELS`).

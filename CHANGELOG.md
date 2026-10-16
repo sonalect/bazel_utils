@@ -8,6 +8,50 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-16
+
+### Added
+
+- `bazel_utils_buf`: Buf CLI `v1.74.0` in the fetch catalog (`registry.bzl`).
+  `v1.72.0` and `v1.73.0` stay available.
+- `bazel_utils_protoc`: `protoc-gen-connect-go` catalog versions v1.21.1 and
+  v2.0.1, and `protoc-gen-protovalidate-buffa` catalog version v0.10.4, for
+  linux, darwin, and windows on amd64 and arm64.
+- `bazel_utils_protoc`: `protoc-gen-protocontract-buffa` catalog version
+  v0.3.1 (the renamed `protoc-gen-contract-rust`, from
+  [sonalect/protocontract-buffa.rs](https://github.com/sonalect/protocontract-buffa.rs))
+  for linux, darwin, and windows on amd64 and arm64: the static binaries of
+  the project's GitHub Release, with the sha256 of its
+  `checksums-sha256.txt`. The crates on crates.io are source only. The
+  fallback pin is v0.3.1; the plugin is in `//:protoc_plugins`, both README
+  tables, and `//tests/buf:plugins`.
+
+### Changed
+
+- `bazel_utils_buf`: fallback `buf.toolchains` when this module is root is
+  `v1.74.0`.
+- `bazel_utils_protoc`: fallback pins `protoc-gen-connect-go` from v1.21.0 to
+  v1.21.1 and `protoc-gen-protovalidate-buffa` from v0.10.3 to v0.10.4.
+- `bazel_utils_python`: uv from 0.13.0 to 0.13.1.
+- `bazel_utils_markdown`: Node from 24.21.0 to 24.22.0 (`node_repositories`
+  from `SHASUMS256.txt`) and pnpm from 12.11.2 to 12.13.0
+  (`pnpm_version_integrity` from npm, `package.json` `packageManager`).
+- `bazel_utils_go`: govulncheck from `golang.org/x/vuln` v1.8.0 to v1.9.0,
+  with the indirect `golang.org/x/tools` v0.52.0 and `golang.org/x/telemetry`
+  it requires.
+- Raised every language module and the aggregator to `0.4.0` (lockstep; a
+  minor bump for the removed plugin).
+
+### Removed
+
+- **Breaking:** `bazel_utils_protoc`: `protoc-gen-contract-rust` (catalog
+  versions v0.1.0, v0.2.0, v0.2.1), its labels
+  `@bazel_utils_protoc//plugins/protoc-gen-contract-rust` and
+  `@bazel_utils_buf//protoc/plugins/protoc-gen-contract-rust`, and its
+  `protoc.plugin` name. The project renamed the plugin; take
+  `protoc-gen-protocontract-buffa` v0.3.1 (in `buf.gen.yaml`,
+  `local: protoc-gen-protocontract-buffa`).
+
 ## [0.3.4] - 2026-10-12
 
 ### Fixed
@@ -402,7 +446,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.3.4...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/sonalect/bazel_utils/compare/v0.3.4...v0.4.0
 [0.3.4]: https://github.com/sonalect/bazel_utils/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/sonalect/bazel_utils/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/sonalect/bazel_utils/compare/v0.3.1...v0.3.2

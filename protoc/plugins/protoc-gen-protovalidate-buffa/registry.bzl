@@ -141,5 +141,37 @@ PLUGIN = {
                 "sha256": "5940a770b52195cc209eb6f06ecd67a1cfdbb1128925825b4822364cc0b1ed82",
             },
         },
+        "v0.10.4": {
+            "linux_amd64": {
+                "bin": "protoc-gen-protovalidate-buffa",
+                "file": "x86_64-unknown-linux-gnu.tar.gz",
+                "sha256": "832496ed62408e89db06d775b79ab99f6cc7b847b48bee0219b168d48e9dbde2",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-protovalidate-buffa",
+                "file": "aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "a51d55801844079de280a63f5737fe97a92e02945041113ab9323f2335423c1e",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-protovalidate-buffa",
+                "file": "x86_64-apple-darwin.tar.gz",
+                "sha256": "0e2bc6ec8649f8facf0050d587ffc8befa2396453ad1630f22cbc775c0c36a98",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-protovalidate-buffa",
+                "file": "aarch64-apple-darwin.tar.gz",
+                "sha256": "6a686d89d223e212ee791acee9babb47a11237fad0b536bb30c9defde1f6e603",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-protovalidate-buffa.exe",
+                "file": "x86_64-pc-windows-msvc.zip",
+                "sha256": "79d06459a8fa6f306f166a01408f24728bf9083d0d4dacebbeb2cdec09e2db4b",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-protovalidate-buffa.exe",
+                "file": "aarch64-pc-windows-msvc.zip",
+                "sha256": "4cd88051db44774f1c65fc955d7b4f400204d0fd090803e041c4d917369044c4",
+            },
+        },
     },
 }

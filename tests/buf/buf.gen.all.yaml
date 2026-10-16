@@ -26,7 +26,7 @@ plugins:
     out: gen/rust/connect
     strategy: all
     opt: extern_path=.=crate::proto
-  - local: protoc-gen-contract-rust
+  - local: protoc-gen-protocontract-buffa
     out: gen/rust/contract
     strategy: all
     opt: buffa_module=crate::proto

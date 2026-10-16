@@ -8,21 +8,21 @@ load("//plugins/protoc-gen-buffa:registry.bzl", _buffa = "PLUGIN")
 load("//plugins/protoc-gen-buffa-packaging:registry.bzl", _packaging = "PLUGIN")
 load("//plugins/protoc-gen-connect-go:registry.bzl", _connect_go = "PLUGIN")
 load("//plugins/protoc-gen-connect-rust:registry.bzl", _connect_rust = "PLUGIN")
-load("//plugins/protoc-gen-contract-rust:registry.bzl", _contract_rust = "PLUGIN")
 load("//plugins/protoc-gen-go:registry.bzl", _go = "PLUGIN")
 load("//plugins/protoc-gen-grpc-gateway:registry.bzl", _grpc_gateway = "PLUGIN")
 load("//plugins/protoc-gen-openapiv2:registry.bzl", _openapiv2 = "PLUGIN")
+load("//plugins/protoc-gen-protocontract-buffa:registry.bzl", _protocontract_buffa = "PLUGIN")
 load("//plugins/protoc-gen-protovalidate-buffa:registry.bzl", _protovalidate = "PLUGIN")
 
 PLUGINS = {
     _buffa["name"]: _buffa,
     _connect_go["name"]: _connect_go,
     _connect_rust["name"]: _connect_rust,
-    _contract_rust["name"]: _contract_rust,
     _go["name"]: _go,
     _grpc_gateway["name"]: _grpc_gateway,
     _openapiv2["name"]: _openapiv2,
     _packaging["name"]: _packaging,
+    _protocontract_buffa["name"]: _protocontract_buffa,
     _protovalidate["name"]: _protovalidate,
 }
 

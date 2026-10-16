@@ -4,8 +4,8 @@ package(default_visibility = ["//visibility:public"])
 
 # Target name is the PATH name (`local:` / protoc-gen) the frontend looks up.
 alias(
-    name = "protoc-gen-contract-rust",
-    actual = "@protoc_gen_contract_rust//:protoc-gen-contract-rust",
+    name = "protoc-gen-protocontract-buffa",
+    actual = "@protoc_gen_protocontract_buffa//:protoc-gen-protocontract-buffa",
 )
 
 bzl_library(

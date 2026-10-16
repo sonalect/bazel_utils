@@ -45,6 +45,38 @@ PLUGIN = {
                 "sha256": "ddebd2ab81fbfd039d3643e5dabe39d16b67c8fc38e8ae16542b37b09842ef84",
             },
         },
+        "v1.21.1": {
+            "linux_amd64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Linux-x86_64.tar.gz",
+                "sha256": "5c34eedc4ee9970a6349c69d494fbeff650a4b3e411a63cc52304eec3f16aef8",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Linux-aarch64.tar.gz",
+                "sha256": "11fda185a7dcebc5ac5b0838ec96ff143cc2a67b76c7d0f74479c98bb69cff4b",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Darwin-x86_64.tar.gz",
+                "sha256": "fb205d8c9f661b0b4d4c1062402b67c115beedc544ac489e526a5971b93801bc",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Darwin-arm64.tar.gz",
+                "sha256": "ea7d230e13d9b48e0c5b9903fdf1dad04a2940e07fdf15821b0daf23d8740cbb",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-connect-go.exe",
+                "file": "Windows-x86_64.zip",
+                "sha256": "668771bbfd04859a62773d9926c8defa4939b8cf8bb475d8d0a431af091beb02",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-connect-go.exe",
+                "file": "Windows-arm64.zip",
+                "sha256": "c195dc645d21d4b69243596d1e6b22655fd55296326621217bdba3a2c267b69a",
+            },
+        },
         "v2.0.0": {
             "linux_amd64": {
                 "bin": "protoc-gen-connect-go",
@@ -75,6 +107,38 @@ PLUGIN = {
                 "bin": "protoc-gen-connect-go.exe",
                 "file": "Windows-arm64.zip",
                 "sha256": "089f592bbce29e932d65b2d951d340a8798a5b0fca0c81eb857bfc16c41213d0",
+            },
+        },
+        "v2.0.1": {
+            "linux_amd64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Linux-x86_64.tar.gz",
+                "sha256": "35bcf3feb82d29aaef8a40aae87e6a5738fbfc684e727e13e481428726c6b6b7",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Linux-aarch64.tar.gz",
+                "sha256": "d4807adcd979bc6b41cc929de3de4b5a808001805937bd94c3713251b0a40cf7",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Darwin-x86_64.tar.gz",
+                "sha256": "283f0a8dfc07021c88a3511536fe0e92ff10ca328e40fafacbd911230c70fd5e",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-connect-go",
+                "file": "Darwin-arm64.tar.gz",
+                "sha256": "0ad1d58b1c8097cc6d38e91dee8a724f356f014dce96107d52bc75ed7234755e",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-connect-go.exe",
+                "file": "Windows-x86_64.zip",
+                "sha256": "506f76f531b0293882f302213e8bc7164aa7bf606d1712974d6c6b33cba0c38b",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-connect-go.exe",
+                "file": "Windows-arm64.zip",
+                "sha256": "a634b0dc8aa9f6210c3cecd5f4ef034546d9a76961204d75c13fe9158092e3da",
             },
         },
     },
