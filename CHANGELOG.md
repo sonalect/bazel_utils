@@ -8,6 +8,20 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-18
+
+### Added
+
+- `bazel_utils_protoc`: `protoc-gen-protocontract-buffa` catalog version
+  v0.4.0 (references to a service) for linux, darwin, and windows on amd64
+  and arm64: the static binaries of the project's GitHub Release, with the
+  sha256 of its `checksums-sha256.txt`. v0.3.1 stays available.
+
+### Changed
+
+- `bazel_utils_protoc`: fallback pin of `protoc-gen-protocontract-buffa`
+  from v0.3.1 to v0.4.0.
+
 ## [0.4.0] - 2026-10-16
 
 ### Added
@@ -446,7 +460,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/sonalect/bazel_utils/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/sonalect/bazel_utils/compare/v0.3.4...v0.4.0
 [0.3.4]: https://github.com/sonalect/bazel_utils/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/sonalect/bazel_utils/compare/v0.3.2...v0.3.3
