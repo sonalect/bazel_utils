@@ -4,7 +4,7 @@ Starlark helpers for Bazel workspaces. Each language is a **separate Bazel modul
 
 `bazel_utils_core` is pulled in transitively. The root module `bazel_utils` in this repository is an aggregator for development, not a consumer dependency.
 
-Current module version: **0.4.1**. See [CHANGELOG.md](CHANGELOG.md) for release notes.
+Current module version: **0.4.2**. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 | Module                                      | Load                                   | Public API                                                                            |
 | ------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -22,16 +22,16 @@ Pass `buildifier` / `golangci` / `govulncheck` / `buf` / `ruff` / `uv` / `cargo_
 
 Windows needs no host bash (Git Bash, MSYS2) or Python. `bazel_utils_core` downloads [busybox-w32](https://frippery.org/busybox/) (amd64, arm64): the `*_test` and `*_format` wrappers run through a `.bat` launcher with `busybox sh`, and `buf_module` / `buf_generate` actions run with it too. Linux and macOS use the system bash. Prebuilt binaries have a `.exe` output on Windows. `markdownlint_test` on Windows needs `build:windows --enable_runfiles` (with `common --enable_platform_specific_config`): rules_js's `js_binary` needs a runfiles tree. `protoc.plugin` zip releases are extracted at build time with the hermetic bsdtar from [tar.bzl](https://registry.bazel.build/modules/tar.bzl); no host Python or unzip is used.
 
-Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.4.1` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
+Modules live in subdirectories of [sonalect/bazel_utils](https://github.com/sonalect/bazel_utils.git). Pin each language module with `git_override` at tag `v0.4.2` and `strip_prefix` matching that directory. Language modules depend on `bazel_utils_core` (no public macros, not on the Bazel Central Registry), so add this once:
 
 ```starlark
-bazel_dep(name = "bazel_utils_core", version = "0.4.1")
+bazel_dep(name = "bazel_utils_core", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_core",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "core",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 ```
 
@@ -45,13 +45,13 @@ Prebuilt [buildifier](https://github.com/bazelbuild/buildtools) (GitHub release,
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_bazel", version = "0.4.1")
+bazel_dep(name = "bazel_utils_bazel", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_bazel",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "bazel",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 ```
 
@@ -128,13 +128,13 @@ The action sandbox does not inherit the user shell. Without this, buf runs anony
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_buf", version = "0.4.1")
+bazel_dep(name = "bazel_utils_buf", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_buf",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "buf",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 
 buf = use_extension("@bazel_utils_buf//:extensions.bzl", "buf")
@@ -238,7 +238,7 @@ GitHub-release binaries from [`bazel_utils_protoc`](#bazel_utils_protoc). Tag th
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`                                                                | v1.36.12                                    | linux/darwin/windows amd64+arm64                                    |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway`                                                      | v2.30.0, v2.31.0                            | linux/darwin/windows amd64+arm64                                    |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`                                                         | v2.30.0, v2.31.0                            | linux/darwin/windows amd64+arm64                                    |
-| `@bazel_utils_buf//protoc/plugins/protoc-gen-protocontract-buffa` | [sonalect/protocontract-buffa.rs](https://github.com/sonalect/protocontract-buffa.rs) ([crates.io](https://crates.io/crates/protoc-gen-protocontract-buffa)) | v0.3.1, v0.4.0                              | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_buf//protoc/plugins/protoc-gen-protocontract-buffa` | [sonalect/protocontract-buffa.rs](https://github.com/sonalect/protocontract-buffa.rs) ([crates.io](https://crates.io/crates/protoc-gen-protocontract-buffa)) | v0.3.1, v0.4.0, v0.4.1                      | linux/darwin/windows amd64+arm64                                    |
 | `@bazel_utils_buf//protoc/plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)                                                                  | v0.10.0, v0.10.1, v0.10.2, v0.10.3, v0.10.4 | linux/darwin/windows amd64+arm64                                    |
 
 ```starlark
@@ -356,13 +356,13 @@ Canonical labels: `@bazel_utils_protoc//plugins/…`. [`bazel_utils_buf`](#bazel
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_protoc", version = "0.4.1")
+bazel_dep(name = "bazel_utils_protoc", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_protoc",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "protoc",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 
 protoc = use_extension("@bazel_utils_protoc//:extensions.bzl", "protoc")
@@ -424,7 +424,7 @@ Module-extension tag. One per plugin name per module; the root module's tag wins
 | `@bazel_utils_protoc//plugins/protoc-gen-go`                  | [protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go) `protoc-gen-go`                                                                | v1.36.12                                    | linux/darwin/windows amd64+arm64                                    |
 | `@bazel_utils_protoc//plugins/protoc-gen-grpc-gateway`        | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-grpc-gateway`                                                      | v2.30.0, v2.31.0                            | linux/darwin/windows amd64+arm64                                    |
 | `@bazel_utils_protoc//plugins/protoc-gen-openapiv2`           | [grpc-ecosystem/grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) `protoc-gen-openapiv2`                                                         | v2.30.0, v2.31.0                            | linux/darwin/windows amd64+arm64                                    |
-| `@bazel_utils_protoc//plugins/protoc-gen-protocontract-buffa` | [sonalect/protocontract-buffa.rs](https://github.com/sonalect/protocontract-buffa.rs) ([crates.io](https://crates.io/crates/protoc-gen-protocontract-buffa)) | v0.3.1, v0.4.0                              | linux/darwin/windows amd64+arm64                                    |
+| `@bazel_utils_protoc//plugins/protoc-gen-protocontract-buffa` | [sonalect/protocontract-buffa.rs](https://github.com/sonalect/protocontract-buffa.rs) ([crates.io](https://crates.io/crates/protoc-gen-protocontract-buffa)) | v0.3.1, v0.4.0, v0.4.1                      | linux/darwin/windows amd64+arm64                                    |
 | `@bazel_utils_protoc//plugins/protoc-gen-protovalidate-buffa` | [mathematic-inc/protovalidate-buffa](https://github.com/mathematic-inc/protovalidate-buffa)                                                                  | v0.10.0, v0.10.1, v0.10.2, v0.10.3, v0.10.4 | linux/darwin/windows amd64+arm64                                    |
 
 ---
@@ -439,13 +439,13 @@ Both tools run in the `manifest` (`go.mod`) directory, so `go.mod` may be below 
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_go", version = "0.4.1")
+bazel_dep(name = "bazel_utils_go", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_go",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "go",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 ```
 
@@ -513,13 +513,13 @@ Prebuilt [ruff](https://github.com/astral-sh/ruff) and [uv](https://github.com/a
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_python", version = "0.4.1")
+bazel_dep(name = "bazel_utils_python", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_python",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "python",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 ```
 
@@ -603,13 +603,13 @@ Prebuilt [cargo-audit](https://github.com/rustsec/rustsec/tree/main/cargo-audit)
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_rust", version = "0.4.1")
+bazel_dep(name = "bazel_utils_rust", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_rust",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "rust",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 ```
 
@@ -650,13 +650,13 @@ cargo_audit_test(
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "bazel_utils_md", version = "0.4.1")
+bazel_dep(name = "bazel_utils_md", version = "0.4.2")
 
 git_override(
     module_name = "bazel_utils_md",
     remote = "https://github.com/sonalect/bazel_utils.git",
     strip_prefix = "markdown",
-    tag = "v0.4.1",
+    tag = "v0.4.2",
 )
 ```
 

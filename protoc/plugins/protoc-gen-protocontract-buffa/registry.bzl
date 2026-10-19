@@ -82,5 +82,37 @@ PLUGIN = {
                 "sha256": "e16bf224be0b63178a94845aa0d184d392ccf54f9a05af0dd0b569d8fbc85f93",
             },
         },
+        "v0.4.1": {
+            "linux_amd64": {
+                "bin": "protoc-gen-protocontract-buffa",
+                "file": "linux-x86_64",
+                "sha256": "bd103e2cdb2e48441d604e46c2c5708efbac909f99ca51654c1334fe2aa3efa8",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-protocontract-buffa",
+                "file": "linux-aarch64",
+                "sha256": "e654a787838495b0e0ed6a586a02b94038674bc78ee5cca322d01e19b0eea358",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-protocontract-buffa",
+                "file": "darwin-x86_64",
+                "sha256": "bd51dd3777b48b0e0b50d95f2b18ed5404035724876b7a4217c8c873fc8ecb58",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-protocontract-buffa",
+                "file": "darwin-aarch64",
+                "sha256": "16ac06f5d1ef78eca45b31b0790f1beb10c259fa340b0308e278fc4b470ff543",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-protocontract-buffa.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "5bd440fabf75042bc8dbc908bfa939f19af409cb8c02e338b0b4009b8026bced",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-protocontract-buffa.exe",
+                "file": "windows-aarch64.exe",
+                "sha256": "360aba65b60d78b18b2e6eab4142604dcbae1cb6b4a5512b99f9d256fe15fc1f",
+            },
+        },
     },
 }
