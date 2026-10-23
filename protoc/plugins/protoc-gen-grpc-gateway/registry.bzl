@@ -77,5 +77,37 @@ PLUGIN = {
                 "sha256": "3ce0de4e2131231666850a2c6e1601d86b698c8b151bcb2a8a873899430b5ce8",
             },
         },
+        "v2.32.0": {
+            "linux_amd64": {
+                "bin": "protoc-gen-grpc-gateway",
+                "file": "linux-x86_64",
+                "sha256": "8280ca4c6255714346915535aeb86e588c4525a7e1b49d94ae7a0966761d5da4",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-grpc-gateway",
+                "file": "linux-arm64",
+                "sha256": "d282f2f67c57d104f380518ba5250338926c6a765508477272068aaf05d4c2eb",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-grpc-gateway",
+                "file": "darwin-x86_64",
+                "sha256": "3a77961c36f687bd5d53336f9eaf4bd2d13c8213414be66973a2592d50f6df8b",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-grpc-gateway",
+                "file": "darwin-arm64",
+                "sha256": "e92c0e185320d5c3c0901b35481245b2ca934a3fb0e96707f804b0f0dbd336d8",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-grpc-gateway.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "ea0624c7e168abae94dfc492eba525376959a5347137eb674740c326d41f3921",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-grpc-gateway.exe",
+                "file": "windows-arm64.exe",
+                "sha256": "49f565ed770332ab52bbca8e4e9e694a82f62af632c4516e90e672b26ef3b0b9",
+            },
+        },
     },
 }

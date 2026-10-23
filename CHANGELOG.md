@@ -8,6 +8,45 @@ patch; breaking Starlark API changes bump the minor.
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-10-23
+
+### Added
+
+- `bazel_utils_buf`: Buf CLI `v1.75.0` in the fetch catalog (`registry.bzl`).
+  `v1.72.0` to `v1.74.0` stay available.
+- `bazel_utils_protoc`: catalog versions v2.0.2 of `protoc-gen-connect-go`,
+  v2.32.0 of `protoc-gen-grpc-gateway` and `protoc-gen-openapiv2`, v0.10.5
+  of `protoc-gen-protovalidate-buffa`, and v0.4.2 of
+  `protoc-gen-protocontract-buffa` (the same plugin as v0.4.1; the release
+  fixes the `protocontract` runtime crate), for linux, darwin, and windows on
+  amd64 and arm64. Earlier versions stay available.
+
+### Changed
+
+- `bazel_utils_buf`: fallback `buf.toolchains` when this module is root is
+  `v1.75.0`.
+- `bazel_utils_protoc`: fallback pins `protoc-gen-grpc-gateway` and
+  `protoc-gen-openapiv2` from v2.31.0 to v2.32.0,
+  `protoc-gen-protovalidate-buffa` from v0.10.4 to v0.10.5, and
+  `protoc-gen-protocontract-buffa` from v0.4.1 to v0.4.2.
+- `bazel_utils_protoc`: `catalog_test` accepts one sha256 for several URLs
+  only when the assets are listed as byte-identical. The linux-aarch64
+  binaries of `protoc-gen-protocontract-buffa` v0.4.1 and v0.4.2 are.
+- `bazel_utils_go`: golangci-lint from 2.14.0 to 2.15.0, rules_go from
+  0.64.2 to 0.65.0 (it needs Bazel 7.7.0 or later), and the Go SDK for
+  govulncheck (`go.mod`) from 1.27.2 to 1.27.3.
+- `bazel_utils_python`: ruff from 0.17.0 to 0.17.2 and uv from 0.13.1 to
+  0.13.5.
+- `bazel_utils_markdown`: aspect_rules_js from 3.5.1 to 3.5.2, rules_nodejs
+  from 6.7.6 to 6.7.7, and Node from 24.22.0 to 24.22.1, now from
+  rules_nodejs's own catalog (its sha256s match `SHASUMS256.txt`), so the
+  `node_repositories` pin is gone; pnpm from 12.13.0 to 12.15.0
+  (`pnpm_version_integrity` from npm, `package.json` `packageManager`); and
+  markdownlint-cli2 from 0.23.3 to 0.24.0 (markdownlint 0.42.0).
+- Development: Bazel from 9.3.0 to 9.3.1 (`.bazelversion`) and the CI
+  bazelisk from 1.29.0 to 1.30.0.
+- Raised every language module and the aggregator to `0.4.3` (lockstep).
+
 ## [0.4.2] - 2026-10-19
 
 ### Added
@@ -475,7 +514,8 @@ Initial tagged release. Language modules for Bazel workspaces:
 Pin modules with `git_override` at tag `v0.1.0`. `bazel_utils_core` is a
 transitive dependency, not a consumer API.
 
-[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.4.2...HEAD
+[unreleased]: https://github.com/sonalect/bazel_utils/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/sonalect/bazel_utils/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/sonalect/bazel_utils/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/sonalect/bazel_utils/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/sonalect/bazel_utils/compare/v0.3.4...v0.4.0

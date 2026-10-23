@@ -85,6 +85,32 @@ CLI = {
             "sha256": "681d1d56d42d7e5d74cbcd940cc0e8d656aed66d926a1e0c9f6ef9bd514d8fff",
         },
     },
+    "v1.75.0": {
+        "linux_amd64": {
+            "file": "buf-Linux-x86_64",
+            "sha256": "fad1e38d6909bbb583a4da81d8c02a01046e2cd663bde7e337dd24277393764b",
+        },
+        "linux_arm64": {
+            "file": "buf-Linux-aarch64",
+            "sha256": "00eb190aa82df17f393e05b04889cc60a0b13b3259d336e21a87d5f23ab4fd26",
+        },
+        "darwin_amd64": {
+            "file": "buf-Darwin-x86_64",
+            "sha256": "ff6d0979143c661d59178a032c57be883b2ac03dc9bf7d00ffca222b0354bd46",
+        },
+        "darwin_arm64": {
+            "file": "buf-Darwin-arm64",
+            "sha256": "f71b009ebd8530b12fd85b060c6c245e15d6e5110ccc8da48d8b6fa71e59330b",
+        },
+        "windows_amd64": {
+            "file": "buf-Windows-x86_64.exe",
+            "sha256": "de35b288e7962ac72aefee5048aff80551a4f0e6ac865a21f838693461ac8b8d",
+        },
+        "windows_arm64": {
+            "file": "buf-Windows-arm64.exe",
+            "sha256": "57fdfac407c0538707a7d8f7ddc13fcd8770e3c58dcffe7d55e7d8f1804cca61",
+        },
+    },
 }
 
 def cli_platforms(version):

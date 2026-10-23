@@ -77,5 +77,37 @@ PLUGIN = {
                 "sha256": "41d56ea81d2f3abd6f02075fbab3a0020389d6d289925745ebf45f8a0841265b",
             },
         },
+        "v2.32.0": {
+            "linux_amd64": {
+                "bin": "protoc-gen-openapiv2",
+                "file": "linux-x86_64",
+                "sha256": "a41111bb4fefc8320f6a68b128cb0f6b0c78b4f94b40354d3bbc3b4f74c52977",
+            },
+            "linux_arm64": {
+                "bin": "protoc-gen-openapiv2",
+                "file": "linux-arm64",
+                "sha256": "5228b2588b4892994b31195a646bfd14196ad7fe2cc1e90ca0725030d99eb00f",
+            },
+            "darwin_amd64": {
+                "bin": "protoc-gen-openapiv2",
+                "file": "darwin-x86_64",
+                "sha256": "b31d45b0b1cbd646fd83453e5dfdabc1ed523a299789b5ecb1f19859d74bcee9",
+            },
+            "darwin_arm64": {
+                "bin": "protoc-gen-openapiv2",
+                "file": "darwin-arm64",
+                "sha256": "dec0a9501a663b91d7bbde660b26c114cf0a48be1417db6dff9022a02a37c452",
+            },
+            "windows_amd64": {
+                "bin": "protoc-gen-openapiv2.exe",
+                "file": "windows-x86_64.exe",
+                "sha256": "25054be27cb758a7e310e4a2ac3a6dac0d2746db11b348d36f0a1226c2448e8c",
+            },
+            "windows_arm64": {
+                "bin": "protoc-gen-openapiv2.exe",
+                "file": "windows-arm64.exe",
+                "sha256": "0a9ebefa966e79628893f411dc0ca74d1b1e68a334737d06c1e6009a53cb4f4a",
+            },
+        },
     },
 }

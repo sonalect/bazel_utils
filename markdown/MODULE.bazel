@@ -2,61 +2,26 @@
 
 module(
     name = "bazel_utils_md",
-    version = "0.4.2",
+    version = "0.4.3",
 )
 
-bazel_dep(name = "aspect_rules_js", version = "3.5.1")
+bazel_dep(name = "aspect_rules_js", version = "3.5.2")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
-bazel_dep(name = "bazel_utils_core", version = "0.4.2")
-bazel_dep(name = "rules_nodejs", version = "6.7.6")
+bazel_dep(name = "bazel_utils_core", version = "0.4.3")
+bazel_dep(name = "rules_nodejs", version = "6.7.7")
 
-# Newer than rules_nodejs 6.7.6's catalog, so the sha256s come from
-# https://nodejs.org/dist/v24.22.0/SHASUMS256.txt.
-# Key: "<version>-<platform>"; value: [filename, strip_prefix, sha256].
+# In rules_nodejs 6.7.7's catalog (sha256s match
+# https://nodejs.org/dist/v24.22.1/SHASUMS256.txt).
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain(
-    node_repositories = {
-        "24.22.0-darwin_amd64": [
-            "node-v24.22.0-darwin-x64.tar.gz",
-            "node-v24.22.0-darwin-x64",
-            "495e3f273c645f3c4677d438304cdfc701729ea5dec5728f5c8e76a2dece4b91",
-        ],
-        "24.22.0-darwin_arm64": [
-            "node-v24.22.0-darwin-arm64.tar.gz",
-            "node-v24.22.0-darwin-arm64",
-            "6a9724d9b50a5f22b4816cded441b5a8d9ddae546191a5e5b7efa5a5e2ee26d5",
-        ],
-        "24.22.0-linux_amd64": [
-            "node-v24.22.0-linux-x64.tar.xz",
-            "node-v24.22.0-linux-x64",
-            "cc2f601cee82d9a5a233302fe307abc600727035fd7d2c3a3571755989e95008",
-        ],
-        "24.22.0-linux_arm64": [
-            "node-v24.22.0-linux-arm64.tar.xz",
-            "node-v24.22.0-linux-arm64",
-            "fef00bb4d36e1c50104a9775a10359beee98f162b4104dd12472c75065c6a143",
-        ],
-        "24.22.0-windows_amd64": [
-            "node-v24.22.0-win-x64.zip",
-            "node-v24.22.0-win-x64",
-            "f9683a19877e12a9b167305c8db71040d812876359de21f0d2e97c3f321f80c3",
-        ],
-        "24.22.0-windows_arm64": [
-            "node-v24.22.0-win-arm64.zip",
-            "node-v24.22.0-win-arm64",
-            "3a5c209a5bc59e65b3bc0fa13ed5e166a26bd3d55332847f498b76b037408d61",
-        ],
-    },
-    node_version = "24.22.0",
-)
+node.toolchain(node_version = "24.22.1")
 
-# Newer than rules_js 3.5.1's catalog, so the integrity comes from npm
-# (https://registry.npmjs.org/pnpm/12.13.0, dist.integrity).
+# Newer than rules_js 3.5.2's catalog, so the integrity comes from npm
+# (https://registry.npmjs.org/pnpm/12.15.0, dist.integrity).
 # Keep in sync with package.json `packageManager`.
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
-    pnpm_version = "12.13.0",
-    pnpm_version_integrity = "sha512-HlVxm/JugJ3OXFCE/euqZO+z2pA4rl1oqfimgxHxpFhByMO3ajcpjDtm9rzIBAmpt/M8eKcWij6Q+2Wl2CNa5A==",
+    pnpm_version = "12.15.0",
+    pnpm_version_integrity = "sha512-s5UdbW/0qfE9x89WzSjSuOs328ycaOUuHhGRhz6p+CoBcoerULqtxczElPA2xnwOR+sTYIwvo29HcRth6hKOYQ==",
 )
 use_repo(pnpm, "pnpm")
 
